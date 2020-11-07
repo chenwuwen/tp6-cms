@@ -1,0 +1,123 @@
+<div class="layui-fluid">
+    <div class="layui-card">
+      <div class="layui-card-header">表单组合</div>
+      <div class="layui-card-body" style="padding: 15px;">
+        <form class="layui-form" action="" lay-filter="component-form-group">
+          
+          
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label class="layui-form-label">客户名称</label>
+              <div class="layui-input-inline">
+                <input type="text" name="number" lay-verify="required|number" autocomplete="off" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-inline">
+              <label class="layui-form-label">地址</label>
+              <div class="layui-input-inline">
+                <input type="text" name="date" id="LAY-component-form-group-date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input" lay-key="2">
+              </div>
+            </div>
+            <div class="layui-inline">
+              <label class="layui-form-label">电话</label>
+              <div class="layui-input-inline">
+                <input type="tel" name="url" lay-verify="url" autocomplete="off" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">联系人</label>
+                <div class="layui-input-inline">
+                  <input type="tel" name="url" lay-verify="url" autocomplete="off" class="layui-input">
+                </div>
+              </div>
+          </div>
+          
+
+          <div class="layui-form-item">
+            <label class="layui-form-label">自定义验证</label>
+            <div class="layui-input-inline">
+              <input type="password" name="password" lay-verify="pass" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">请填写6到12位密码</div>
+          </div>
+
+          
+
+          
+          
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label class="layui-form-label">分组选择框</label>
+              <div class="layui-input-inline">
+                <select name="quiz">
+                  <option value="">请选择问题</option>
+                  <optgroup label="城市记忆">
+                    <option value="你工作的第一个城市">你工作的第一个城市</option>
+                  </optgroup>
+                  <optgroup label="学生时代">
+                    <option value="你的工号">你的工号</option>
+                    <option value="你最喜欢的老师">你最喜欢的老师</option>
+                  </optgroup>
+                </select><div class="layui-unselect layui-form-select"><div class="layui-select-title"><input type="text" placeholder="请选择问题" value="" readonly="" class="layui-input layui-unselect"><i class="layui-edge"></i></div><dl class="layui-anim layui-anim-upbit layui-select-group"><dd lay-value="" class="layui-select-tips">请选择问题</dd><dt>城市记忆</dt><dd lay-value="你工作的第一个城市" class="">你工作的第一个城市</dd><dt>学生时代</dt><dd lay-value="你的工号" class="">你的工号</dd><dd lay-value="你最喜欢的老师" class="">你最喜欢的老师</dd></dl></div>
+              </div>
+            </div>
+ 
+          
+
+          
+          <div class="layui-form-item">
+            <label class="layui-form-label">复选框</label>
+            <div class="layui-input-block">
+              <input type="checkbox" name="like[write]" title="写作"><div class="layui-unselect layui-form-checkbox"><span>写作</span><i class="layui-icon layui-icon-ok"></i></div>
+              <input type="checkbox" name="like[read]" title="阅读" checked=""><div class="layui-unselect layui-form-checkbox layui-form-checked"><span>阅读</span><i class="layui-icon layui-icon-ok"></i></div>
+              <input type="checkbox" name="like[game]" title="游戏"><div class="layui-unselect layui-form-checkbox"><span>游戏</span><i class="layui-icon layui-icon-ok"></i></div>
+            </div>
+          </div>
+          
+          <div class="layui-form-item" pane="">
+            <label class="layui-form-label">原始复选框</label>
+            <div class="layui-input-block">
+              <input type="checkbox" name="like1[write]" lay-skin="primary" title="写作" checked=""><div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="primary"><span>写作</span><i class="layui-icon layui-icon-ok"></i></div>
+              <input type="checkbox" name="like1[read]" lay-skin="primary" title="阅读"><div class="layui-unselect layui-form-checkbox" lay-skin="primary"><span>阅读</span><i class="layui-icon layui-icon-ok"></i></div>
+              <input type="checkbox" name="like1[game]" lay-skin="primary" title="游戏" disabled=""><div class="layui-unselect layui-form-checkbox layui-checkbox-disbaled layui-disabled" lay-skin="primary"><span>游戏</span><i class="layui-icon layui-icon-ok"></i></div>
+            </div>
+          </div>
+          
+          <div class="layui-form-item">
+            <label class="layui-form-label">开关-默认关</label>
+            <div class="layui-input-block">
+              <input type="checkbox" name="close" lay-skin="switch" lay-text="ON|OFF"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>OFF</em><i></i></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">开关-默认开</label>
+            <div class="layui-input-block">
+              <input type="checkbox" checked="" name="open" lay-skin="switch" lay-filter="component-form-switchTest" lay-text="ON|OFF"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>ON</em><i></i></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">单选框</label>
+            <div class="layui-input-block">
+              <input type="radio" name="sex" value="男" title="男" checked=""><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon"></i><div>男</div></div>
+              <input type="radio" name="sex" value="女" title="女"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>女</div></div>
+              <input type="radio" name="sex" value="禁" title="禁用" disabled=""><div class="layui-unselect layui-form-radio layui-radio-disbaled layui-disabled"><i class="layui-anim layui-icon"></i><div>禁用</div></div>
+            </div>
+          </div>
+          <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">普通文本域</label>
+            <div class="layui-input-block">
+              <textarea name="text" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+          </div>        
+          <div class="layui-form-item">
+            <div class="layui-input-block">
+              <div class="layui-footer">
+                <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

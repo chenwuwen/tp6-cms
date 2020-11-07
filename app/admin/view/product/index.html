@@ -1,0 +1,140 @@
+<body>
+  <div class="layui-fluid">
+    <div class="layui-card">
+      <div class="layui-card-body">
+        <table id="product_table" lay-filter="product_table"></table>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/html" id="operatorBar">
+<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+</script>
+
+  <script>
+    layui.use(['jquery', 'form', 'element', 'table'], function () {
+      var table = layui.table;
+      var form = layui.form;
+
+      //监听搜索
+      form.on('submit(LAY-user-back-search)', function (data) {
+        var field = data.field;
+        console.log("点击搜索按钮")
+        console.log(field)
+        //执行重载
+        table.reload('product_table', {
+          where: field
+        });
+      });
+
+      table.render({
+        url: '{:url("/admin/product/list")}',
+        elem: '#product_table',//指定原始表格元素选择器（推荐id选择器）
+        toolbar: 'default',
+        type: 'POST',
+        height: 315, //容器高度
+        cols: [[                            //设置表头
+          { field: 'id', title: 'ID', type: 'checkbox', },
+          { field: 'product_number', title: '产品编号', align: "center", },
+          { field: 'product_name', title: '产品名称', align: "center", },
+          { field: 'special_request', title: '特殊要求', align: "center", },
+          { field: 'update_time', title: '更新时间', align: "center", },
+          { title: '操作', minWidth: 150, templet: "#operatorBar", fixed: "right", align: "center" }
+        ]],
+        page: true,
+        height: "full-110", //其中110 为距离底部的距离
+        title: '产品信息表',
+        text: "对不起，加载出现异常！"
+
+      });
+      //监听事件toolbar(table元素的id属性值lay-filter="对应的值")
+      table.on('toolbar(product_table)', function (obj) {
+        var checkStatus = table.checkStatus(obj.config.id);
+        switch (obj.event) {
+          case 'add':   //添加操作
+            layer.open({
+              type: 2,
+              area: ['25rem', '25rem'],
+              title: '添加产品',
+              closeBtn: 1,
+              anim: 1,
+              shadeClose: false,
+              skin: 'yourclass',
+              content: '/admin/product/addOrEditProductIndex',
+              end: function (index) {  //弹出框的索引
+                table.reload("product_table", { where: {}, page: { curr: 1 } })
+              }
+            });
+            break;
+          case 'delete':
+            layer.msg('删除');
+            break;
+          case 'update':
+            layer.msg('编辑');
+            break;
+        };
+      });
+
+      //事件
+      var active = {
+        batchdel: function () {
+          var checkStatus = table.checkStatus('product_table')
+            , checkData = checkStatus.data; //得到选中的数据
+
+          if (checkData.length === 0) {
+            return layer.msg('请选择数据');
+          }
+
+          layer.prompt({
+            formType: 1
+            , title: '敏感操作，请验证口令'
+          }, function (value, index) {
+            layer.close(index);
+
+            layer.confirm('确定删除吗？', function (index) {
+
+              //执行 Ajax 后重载
+              /*
+              admin.req({
+                url: 'xxx'
+                //,……
+              });
+              */
+              table.reload('product_table');
+              layer.msg('已删除');
+            });
+          });
+        }
+        , add: function () {
+          layer.open({
+            type: 2
+            , title: '添加管理员'
+            , content: 'adminform.html'
+            , area: ['420px', '420px']
+            , btn: ['确定', '取消']
+            , yes: function (index, layero) {
+              var iframeWindow = window['layui-layer-iframe' + index]
+                , submitID = 'LAY-user-back-submit'
+                , submit = layero.find('iframe').contents().find('#' + submitID);
+
+              //监听提交
+              iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                var field = data.field; //获取提交的字段
+
+                //提交 Ajax 成功后，静态更新表格中的数据
+                //$.ajax({});
+                table.reload('LAY-user-front-submit'); //数据刷新
+                layer.close(index); //关闭弹层
+              });
+
+              submit.trigger('click');
+            }
+          });
+        }
+      }
+
+
+
+    })
+  </script>
+</body>

@@ -1,0 +1,103 @@
+<div class="layui-form" lay-filter="layuiadmin-form-admin" id="layuiadmin-form-admin" style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item" style="display: none">
+        <label class="layui-form-label">ID</label>
+        <div class="layui-input-inline">
+            <input type="text" value='{$userDetail.id}' name="id" lay-verify="id" placeholder="请输入登录名"
+                autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">登录名</label>
+        <div class="layui-input-inline">
+            <input type="text" value='{$userDetail.user_code}' name="user_code" lay-verify="user_code"
+                placeholder="请输入登录名" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-inline">
+            <input type="password" name="password" lay-verify="password" placeholder="密码" autocomplete="off"
+                class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-inline">
+            <input type="text" value='{$userDetail.user_name}' name="user_name" placeholder="请输入用户名" autocomplete="off"
+                class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">角色</label>
+        <div class="layui-input-inline">
+            <select name="role" id='selectList'>
+                {foreach $roleList as $key=>$vo }
+                <option value={$vo.id}>{$vo.role_name}</option>
+                {/foreach}
+
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">审核状态</label>
+        <div class="layui-input-inline">
+            <input type="checkbox" lay-filter="switch" name="switch" lay-skin="switch" lay-text="通过|待审核">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="layuiadmin-form-admin">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['jquery', 'form', 'element', 'table'], function () {
+        var $ = layui.jquery
+            , form = layui.form;
+
+        //自定义验证规则
+        form.verify({
+            user_code: function (value) {
+                if (value.length < 5) {
+                    return '账号至少得5个字符';
+                }
+            }
+            , pass: [/^[\S]{6,12}$/, '密码必须6到12位，且不能出现空格']
+
+        });
+
+        form.on('submit(layuiadmin-form-admin)', function (data) {
+            console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+            console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+            $.ajax({
+                url: '{:url("/admin/sysuser/addOrEditSysUser")}',
+                type: 'post',
+                data: data.field,
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.msg('成功!', {
+                            icon: 6,
+                            time: 1000,
+                            shade: 0.3,
+                            end: function () {
+                                // layer自关闭
+                                //当你在iframe页面关闭自身时
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index); //再执行关闭 
+                            }
+                        });
+                    } else {
+                        layer.msg(result.msg);
+                    }
+
+                },
+                error: function () {
+                    layer.msg('系统错误');
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    })
+</script>
