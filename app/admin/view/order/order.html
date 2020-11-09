@@ -1,0 +1,234 @@
+<body>
+    <div class="layui-fluid">
+        <div class="layui-card">
+
+
+            <div class="layui-card-body">
+                <form class="layui-form" action="" id="orderForm" lay-filter="component-form-group">
+                    <div class="layui-form-item" style="display: none">
+                        <label class="layui-form-label">ID</label>
+                        <div class="layui-input-inline">
+                            <input type="text" value='{$orderInfo.id}' name="id" lay-verify="id"
+                                autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">产品编号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="product_number" value='{$orderInfo.product_number}'
+                                    lay-verify="required" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">发货日期</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="send_date" value='{$orderInfo.send_date}' autocomplete="off"
+                                    class="layui-input lay_date">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">检验报告</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="inspection_report" value='{$orderInfo.inspection_report}'
+                                    autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">承运物流</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="logistics" value='{$orderInfo.logistics}' autocomplete="off"
+                                    class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">发货单号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="send_number" value='{$orderInfo.send_number}'
+                                    lay-verify="required" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">收货确认</label>
+                            <div class="layui-input-inline">
+
+                                <select name="rceceipt_confirm">
+
+                                    <option value="已确认" {$orderInfo.rceceipt_confirm==='已确认' ?='selected' }>已确认</option>
+                                    <option value="未确认" {$orderInfo.rceceipt_confirm==='未确认' ?='selected' }>未确认</option>
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">收货日期</label>
+                            <div class="layui-input-inline">
+                                <input type="text" value='{$orderInfo.rceceipt_date}' name="rceceipt_date"
+                                    autocomplete="off" class="layui-input lay_date">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">开票日期</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="invoice_date" value='{$orderInfo.invoice_date}'
+                                    autocomplete="off" class="layui-input lay_date">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">发票代码</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="invoice_code" value='{$orderInfo.invoice_code}'
+                                    lay-verify="required" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">发票号码</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="invoice_number" value='{$orderInfo.invoice_number}'
+                                    autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">发票随货</label>
+                            <div class="layui-input-inline">
+
+                                <select name="invoice_follow" id='selectList'>
+                                    <option value="是" {$orderInfo.invoice_follow==='是' ?='selected' }>是</option>
+                                    <option value="否" {$orderInfo.invoice_follow==='否' ?='selected' }>否</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">快递公司</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="express" value='{$orderInfo.express}' autocomplete="off"
+                                    class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">快递单号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="express_number" value='{$orderInfo.express_number}'
+                                    autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">收票确认</label>
+                            <div class="layui-input-inline">
+
+
+                                <select name="ticket_confirm">
+
+                                    <option value="已确认" {$orderInfo.ticket_confirm==='已确认' ?='selected' }>已确认</option>
+                                    <option value="未确认" {$orderInfo.ticket_confirm==='未确认' ?='selected' }>未确认</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">安装验收</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="acceptance" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">余款追讨</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="recovery_of_balance" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <div class="layui-footer">
+                                <button class="layui-btn" lay-submit="" lay-filter="component-form-order">立即提交</button>
+                                <button type="reset" lay-filter="component-reset-form"
+                                    class="layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+</body>
+<script>
+    layui.use(['jquery', 'form', 'element', 'table', 'laydate'], function () {
+        var $ = layui.jquery
+            , form = layui.form
+            , laydate = layui.laydate;
+
+
+        // 同时绑定多个date
+        lay('.lay_date').each(function () {
+            laydate.render({
+                elem: this,
+                trigger: 'click',
+                type: 'datetime',
+            });
+        });
+
+
+        //自定义验证规则
+        form.verify({
+            user_code: function (value) {
+                if (value.length < 5) {
+                    return '账号至少得5个字符';
+                }
+            }
+            , pass: [/^[\S]{6,12}$/, '密码必须6到12位，且不能出现空格']
+
+        });
+
+        form.on('submit(component-form-order)', function (data) {
+            console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+            console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+            $.ajax({
+                url: '{:url("/admin/order/addOrEditOrder")}',
+                type: 'post',
+                data: data.field,
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.msg('成功!', {
+                            icon: 6,
+                            time: 1000,
+                            shade: 0.3,
+                            end: function () {
+                                // 标签页自关闭
+                                parent.layui.admin.events.closeThisTabs();
+
+                            }
+                        });
+                    } else {
+                        layer.msg(result.msg);
+                    }
+
+                },
+                error: function () {
+                    layer.msg('系统错误');
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        form.on('click(component-reset-form)', function (data) {
+            $("#orderForm")[0].reset();
+
+            layui.form.render();
+        })
+    })
+</script>

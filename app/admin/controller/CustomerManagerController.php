@@ -19,9 +19,9 @@ class CustomerManagerController extends BaseController
 
     public function list()
     {
-        $customerInfo =  new CustomerInfoModel;
+        $customerInfoModel =  new CustomerInfoModel;
         $count = CustomerInfoModel::count();
-        $list = $customerInfo->select();
+        $list = $customerInfoModel->select();
         return ResponseResult::Success($list, $count);
     }
 
@@ -31,8 +31,8 @@ class CustomerManagerController extends BaseController
         $customerId = request()->param('customerId');
         View::assign('customer', null);
         if (empty($customerId)) {
-            $customer = new CustomerInfoModel;
-            $customer->find($customerId);
+            $customerInfoModel = new CustomerInfoModel;
+            $customerInfoModel->find($customerId);
         }
         return View::fetch('/customer/customer');
     }
@@ -43,8 +43,8 @@ class CustomerManagerController extends BaseController
         // \dump($customer);
 
         try {
-            $customerInfo =  new CustomerInfoModel;
-            $result = $customerInfo->save($customer);
+            $customerInfoModel =  new CustomerInfoModel;
+            $result = $customerInfoModel->save($customer);
             if ($result) {
                 return ResponseResult::Success();
             } else {

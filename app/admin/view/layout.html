@@ -22,4 +22,13 @@
 {__CONTENT__}
 
 
+<script type="text/javascript">
+    // 解决iframe重定向,在子页面打开问题(如果是login页面才进行)
+    if (window != top && location.pathname.indexOf('login') != -1) {
+        // console.log(location.pathname)
+        top.location.href = location.origin + location.pathname;
+    }
+
+</script>
+
 </html>

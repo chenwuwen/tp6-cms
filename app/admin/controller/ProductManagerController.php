@@ -17,9 +17,9 @@ class ProductManagerController extends BaseController
 
     public function list()
     {
-        $product = new ProductInfoModel();
-        $count = $product->count();
-        $list = $product::select();
+        $productModel = new ProductInfoModel();
+        $count = $productModel->count();
+        $list = $productModel::select();
         return ResponseResult::Success($list, $count);
 
         # code...

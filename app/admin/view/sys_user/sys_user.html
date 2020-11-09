@@ -2,7 +2,7 @@
     <div class="layui-form-item" style="display: none">
         <label class="layui-form-label">ID</label>
         <div class="layui-input-inline">
-            <input type="text" value='{$userDetail.id}' name="id" lay-verify="id" placeholder="请输入登录名"
+            <input type="text" value='{$userDetail.id}' name="id" lay-verify="id"
                 autocomplete="off" class="layui-input">
         </div>
     </div>
@@ -32,7 +32,7 @@
         <div class="layui-input-inline">
             <select name="role" id='selectList'>
                 {foreach $roleList as $key=>$vo }
-                <option value={$vo.id}>{$vo.role_name}</option>
+                <option value={$vo.id} {$userDetail.role==$vo.id ?= 'selected'}>{$vo.role_name}</option>
                 {/foreach}
 
             </select>
