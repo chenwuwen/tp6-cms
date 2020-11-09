@@ -30,9 +30,9 @@ class CustomerManagerController extends BaseController
         // 获取路由动态参数
         $customerId = request()->param('customerId');
         View::assign('customer', null);
-        if (empty($customerId)) {
-            $customerInfoModel = new CustomerInfoModel;
-            $customerInfoModel->find($customerId);
+        if (!empty($customerId)) {
+            $customerInfo = CustomerInfoModel::find($customerId);
+            View::assign('customer',  $customerInfo);
         }
         return View::fetch('/customer/customer');
     }

@@ -30,10 +30,6 @@
     </div>
 
 
-    <script type="text/html" id="operatorBar">
-
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    </script>
 
     <script>
 
@@ -42,7 +38,8 @@
         layui.use(['jquery', 'form', 'element', 'table'], function () {
             var table = layui.table;
             var form = layui.form;
-
+            // 选中状态(checkStatus.data //获取选中行的数据,checkStatus.data.length//获取选中行数量，可作为是否有选中行的条件 checkStatus.isAll //表格是否全选)
+            var checkStatus = table.checkStatus('sys_user_table');
 
             //监听搜索
             form.on('submit(LAY-user-back-search)', function (data) {
@@ -81,7 +78,6 @@
                     },
                     { field: 'update_time', title: '更新时间', align: "center", },
                     { field: 'contacts', title: '联系人', align: "center", },
-                    { title: '操作', minWidth: 150, templet: "#operatorBar", fixed: "right", align: "center" }
                 ]],
                 page: true,
                 height: "full-110", //其中110 为距离底部的距离
@@ -96,13 +92,17 @@
                     case 'add':   //添加操作
                         layer.open({
                             type: 2,
-                            area: ['45rem', '30rem'],
+                            area: ['100rem','50%'],
                             title: '添加客户信息',
                             closeBtn: 1,
                             anim: 1,
                             shadeClose: false,
                             skin: 'yourclass',
                             content: '/admin/customer/addOrEditCustomerIndex',
+                            success: function (layero, index) {
+                                layer.iframeAuto(index);
+                            },
+
                             end: function (index) {  //弹出框的索引
                                 table.reload("customer_table", { where: {}, page: { curr: 1 } })
                             }
@@ -112,7 +112,23 @@
                         layer.msg('删除');
                         break;
                     case 'update':
-                        layer.msg('编辑');
+                        if (checkStatus.data.length == 1) {
+                            layer.open({
+                                type: 2,
+                                area: ['25rem', '25rem'],
+                                title: '编辑客户信息',
+                                closeBtn: 1,
+                                anim: 1,
+                                shadeClose: false,
+                                skin: 'yourclass',
+                                content: '/admin/customer/addOrEditCustomerIndex/' + checkStatus.data[0].id,
+                                end: function (index) {  //弹出框的索引
+                                    table.reload("sys_user_table", { where: {}, page: { curr: 1 } })
+                                }
+                            })
+                        } else {
+                            layer.msg('请选择一行作为编辑对象!');
+                        }
                         break;
                 };
             });
@@ -185,13 +201,13 @@
         * 下载方法(不跳转下载) ,layui调用自定方法.需要使用 window.自定义方法名
         */
         function download(url) {
-           // 添加一个a标签
-           let ele = document.createElement('a')
+            // 添加一个a标签
+            let ele = document.createElement('a')
             // 给a标签加入下载地址
             ele.download = "../dot9tools.zip"
-             // 隐藏a标签
+            // 隐藏a标签
             ele.style.display = 'none'
-             // 给a标签加入地址
+            // 给a标签加入地址
             ele.href = url
             // 规定在当前页面打开
             ele.target = "_blank"

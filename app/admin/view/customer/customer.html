@@ -1,106 +1,118 @@
 <div class="layui-fluid">
 
-            <form class="layui-form" action="" lay-filter="component-form-group">
+    <form class="layui-form" action="" lay-filter="component-form-group">
 
 
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">客户名称</label>
-                        <div class="layui-input-inline">
-                            <input type="text" value='{$customer.customer_name}' name="customer_name" lay-verify="required" autocomplete="off"
-                                class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">地址</label>
-                        <div class="layui-input-inline">
-                            <input type="text" value='{$customer.customer_address}'  name="customer_address" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">电话</label>
-                        <div class="layui-input-inline">
-                            <input type="tel" name="phone" value='{$customer.phone}'  lay-verify="phone" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">联系人</label>
-                        <div class="layui-input-inline">
-                            <input name="contacts" value='{$customer.contacts}'  class="layui-input">
-                        </div>
-                    </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">客户名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" value='{$customer.customer_name}' name="customer_name" lay-verify="required"
+                        autocomplete="off" class="layui-input">
                 </div>
-
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">收货单位</label>
-                        <div class="layui-input-inline">
-                            <input type="text" value='{$customer.recipient_company}'  name="recipient_company" lay-verify="required" autocomplete="off"
-                                class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">收货地址</label>
-                        <div class="layui-input-inline">
-                            <input type="text" value='{$customer.recipient_address}'  name="recipient_address" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">收货电话</label>
-                        <div class="layui-input-inline">
-                            <input type="text" value='{$customer.recipient_phone}'  name="recipient_phone" lay-verify="phone" autocomplete="off"
-                                class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">收货人</label>
-                        <div class="layui-input-inline">
-                            <input type="text" value='{$customer.recipient}'  name="recipient" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">地址</label>
+                <div class="layui-input-inline">
+                    <input type="text" value='{$customer.customer_address}' name="customer_address" class="layui-input">
                 </div>
-
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">开票资料</label>
-                        <div class="layui-input-inline">
-                            <button type="button" class="layui-btn" id="test1">
-                                <i class="layui-icon">&#xe67c;</i>上传附件
-                            </button>
-                            <i id="file_name">{$customer.ticket_data}</i>
-                            <input type="text" value='{$customer.ticket_data}'  id="ticket_data" name="ticket_data" style="display: none">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">收票地址</label>
-                        <div class="layui-input-inline">
-                            <input type="text" value='{$customer.ticket_address}'  name="ticket_address" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">收票电话</label>
-                        <div class="layui-input-inline">
-                            <input type="tel" value='{$customer.ticket_phone}'  name="ticket_phone" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">收票人</label>
-                        <div class="layui-input-inline">
-                            <input type="text" value='{$customer.ticket}' name="ticket" class="layui-input">
-                        </div>
-                    </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-inline">
+                    <input type="tel" name="phone" value='{$customer.phone}' lay-verify="phone" autocomplete="off"
+                        class="layui-input">
                 </div>
-
-
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <div class="layui-footer">
-                            <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">立即提交</button>
-                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                        </div>
-                    </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">联系人</label>
+                <div class="layui-input-inline">
+                    <input name="contacts" value='{$customer.contacts}' class="layui-input">
                 </div>
-            </form>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">收货单位</label>
+                <div class="layui-input-inline">
+                    <input type="text" value='{$customer.recipient_company}' name="recipient_company"
+                        lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">收货地址</label>
+                <div class="layui-input-inline">
+                    <input type="text" value='{$customer.recipient_address}' name="recipient_address"
+                        class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">收货电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" value='{$customer.recipient_phone}' name="recipient_phone" lay-verify="phone"
+                        autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">收货人</label>
+                <div class="layui-input-inline">
+                    <input type="text" value='{$customer.recipient}' name="recipient" autocomplete="off"
+                        class="layui-input">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">开票资料</label>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn" id="test1">
+                        <i class="layui-icon">&#xe67c;</i>上传附件
+                    </button>
+                    <i id="file_name">{$customer.ticket_data}</i>
+                    <input type="text" value='{$customer.ticket_data}' id="ticket_data" name="ticket_data"
+                        style="display: none">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">收票地址</label>
+                <div class="layui-input-inline">
+                    <input type="text" value='{$customer.ticket_address}' name="ticket_address" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+
+            <div class="layui-inline">
+                <label class="layui-form-label">收票电话</label>
+                <div class="layui-input-inline">
+                    <input type="tel" value='{$customer.ticket_phone}' name="ticket_phone" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">收票人</label>
+                <div class="layui-input-inline">
+                    <input type="text" value='{$customer.ticket}' name="ticket" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <div class="layui-footer">
+                    <button class="layui-btn" lay-submit="" lay-filter="component-form-customer">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </div>
+    </form>
 
 </div>
 
@@ -114,7 +126,7 @@
         var upload = layui.upload;
         var $ = layui.$;
 
-        form.on('submit(component-form-demo1)', function (data) {
+        form.on('submit(component-form-customer)', function (data) {
             console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
             console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
             console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
@@ -158,7 +170,7 @@
                 console.log(files)
                 obj.preview(function (index, file, result) {
                     $("#file_name").html(file.name)
-                } )    
+                })
             },
             done: function (res) {
                 //上传完毕回调

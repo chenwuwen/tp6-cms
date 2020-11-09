@@ -21,26 +21,27 @@ class ProductManagerController extends BaseController
         $count = $productModel->count();
         $list = $productModel::select();
         return ResponseResult::Success($list, $count);
-
-        # code...
     }
 
     public function addOrEditProductIndex()
     {
         $productId = request()->param('productId');
         View::assign('productInfo', null);
-        if (empty($productId)) {
-            $productModel = new ProductInfoModel();
-            $productInfo =  $productModel->find($productId);
+        if (!empty($productId)) {
+            $productInfo = ProductInfoModel::find($productId);
             View::assign('productInfo', $productInfo);
         }
         return View::fetch('product/product');
     }
 
 
-    public function addOrEditProduct($productInfo)
+    /**
+     * 添加或编辑产品信息
+     */
+    public function addOrEditProduct()
     {
-        $productModel = new ProductInfoModel();
+        $productInfo = request()->param();
+        $productModel = new ProductInfoModel;
         $result = $productModel->save($productInfo);
         if ($result) {
             return ResponseResult::Success();
