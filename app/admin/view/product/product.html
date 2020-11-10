@@ -18,43 +18,48 @@
             autocomplete="off" class="layui-input">
         </div>
       </div>
-      <div class="layui-inline">
-        <label class="layui-form-label">产品名称</label>
-        <div class="layui-input-inline">
-          <input type="text" name="product_name" value='{$productInfo.product_name}' lay-verify="required"
-            autocomplete="off" class="layui-input">
-        </div>
-      </div>
-    </div>
 
-    <div class="layui-form-item">
-      <div class="layui-inline">
-        <label class="layui-form-label">规格型号</label>
-        <div class="layui-input-inline">
-          <input type="text" name="product_model" value='{$productInfo.product_model}' autocomplete="off"
-            class="layui-input" lay-key="2">
-        </div>
-      </div>
-    </div>
+</div>
 
-    <div class="layui-form-item layui-form-text">
-      <label class="layui-form-label">特殊要求</label>
-      <div class="layui-input-block">
-        <textarea name="special_request" placeholder="请输入内容" 
-          class="layui-textarea">{$productInfo.special_request}</textarea>
-      </div>
-    </div>
+<div class="layui-form-item">
 
-    <div class="layui-form-item">
-      <div class="layui-input-block">
-        <div class="layui-footer">
-          <button class="layui-btn" lay-submit="" lay-filter="component-form-product">立即提交</button>
-          <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-        </div>
-      </div>
+  <div class="layui-inline">
+    <label class="layui-form-label">产品名称</label>
+    <div class="layui-input-inline">
+      <input type="text" name="product_name" value='{$productInfo.product_name}' lay-verify="required"
+        autocomplete="off" class="layui-input" >
     </div>
+  </div>
+</div>
 
-  </form>
+<div class="layui-form-item">
+  <div class="layui-inline">
+    <label class="layui-form-label">规格型号</label>
+    <div class="layui-input-inline">
+      <input type="text" name="product_model" value='{$productInfo.product_model}' autocomplete="off"
+        class="layui-input" lay-key="2">
+    </div>
+  </div>
+</div>
+
+<div class="layui-form-item layui-form-text">
+  <label class="layui-form-label">特殊要求</label>
+  <div class="layui-input-block">
+    <textarea name="special_request" placeholder="请输入内容"
+      class="layui-textarea">{$productInfo.special_request}</textarea>
+  </div>
+</div>
+
+<div class="layui-form-item">
+  <div class="layui-input-block">
+    <div class="layui-footer">
+      <button class="layui-btn" lay-submit="" lay-filter="component-form-product">立即提交</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+  </div>
+</div>
+
+</form>
 </div>
 <script>
   layui.use(['jquery', 'form', 'element', 'table'], function () {

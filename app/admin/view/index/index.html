@@ -78,30 +78,31 @@
             <span>后台管理</span>
           </div>
 
-    
+
           <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu"
             lay-filter="layadmin-system-side-menu">
 
             <li data-name="dashboard" class="layui-nav-item">
-              <a href="javascript:;" lay-href='{:url("/admin/dashboard")}' lay-tips="控制台" class="layui-this" lay-direction="2">
+              <a href="javascript:;" lay-href='{:url("/admin/dashboard")}' lay-tips="控制台" class="layui-this"
+                lay-direction="2">
                 <i class="layui-icon layui-icon-auz"></i>
                 <cite>控制台</cite>
               </a>
             </li>
-            
+
             <li data-name="home1" class="layui-nav-item">
               <a href="javascript:;" lay-tips="业务" lay-direction="2">
                 <i class="layui-icon layui-icon-home"></i>
                 <cite>业务</cite>
                 <span class="layui-nav-more"></span></a>
               <dl class="layui-nav-child">
-                <dd data-name="console" >
+                <dd data-name="console">
                   <a lay-href='{:url("/admin/customer")}'>客户管理</a>
                 </dd>
-                <dd data-name="console" >
+                <dd data-name="console">
                   <a lay-href='{:url("/admin/product")}'>产品信息</a>
                 </dd>
-                <dd data-name="console" >
+                <dd data-name="console">
                   <a lay-href='{:url("/admin/order")}'>订单管理</a>
                 </dd>
               </dl>
@@ -113,8 +114,9 @@
             <li data-name="user" class="layui-nav-item">
               <a href="javascript:;" lay-tips="用户" lay-direction="2">
                 <i class="layui-icon layui-icon-user"></i>
-                <cite>用户</cite>
-                <span class="layui-nav-more"></span></a>
+                <cite>管理员</cite>
+                <span class="layui-nav-more"></span>
+              </a>
               <dl class="layui-nav-child">
                 <dd>
                   <a lay-href='{:url("/admin/sysuser")}'>后台管理员</a>
@@ -124,6 +126,7 @@
                 </dd>
               </dl>
             </li>
+
             <li data-name="set" class="layui-nav-item">
               <a href="javascript:;" lay-tips="设置" lay-direction="2">
                 <i class="layui-icon layui-icon-set"></i>

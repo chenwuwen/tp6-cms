@@ -1,0 +1,167 @@
+<style>
+    .demo-tree {
+        margin: 10px 20px;
+    }
+
+    .demo-tree-more {
+        margin: 20px;
+    }
+
+    .demo-tree-box {
+        width: 200px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        overflow: auto;
+    }
+</style>
+<div class="layui-fluid">
+
+    <form class="layui-form" action="" lay-filter="component-form-group">
+
+        <div class="layui-form-item" style="display: none">
+            <div class="layui-inline">
+                <label class="layui-form-label">角色Id</label>
+                <div class="layui-input-inline">
+                    <input type="text" value='{$roleInfo.id}' name="id" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">角色名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" value='{$roleInfo.role_name}' id='role_name' name="role_name"
+                        lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限范围</label>
+            <div class="layui-input-block">
+                <div id="permission_tree" class="demo-tree demo-tree-box"
+                    style="width: 200px; height: 200px; overflow: auto"></div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">具体描述</label>
+            <div class="layui-input-block">
+                <textarea type="text" name="describe" lay-verify="required" id='describe' autocomplete="off"
+                    class="layui-textarea">{$roleInfo.describe}</textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="component-form-role">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script>
+    layui.use(['layer', 'jquery', 'tree', 'form', 'element', 'util'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var tree = layui.tree;
+        var util = layui.util;
+        var layer = layui.layer;
+
+        // tp模板获取已有的权限集合
+        var hasPermissionIds = "{$hasPermissionIds}"
+
+        // 初始化执行
+        layer.ready(function () {
+            getPermissionTree()
+        })
+
+        form.on('submit(component-form-role)', function (data) {
+            
+            var permissionIds = getCheckedId(tree.getChecked('permissionId'))
+            console.log(permissionIds)
+            $.ajax({
+                url: '{:url("/admin/role/addOrEditRole")}',
+                type: 'post',
+                data: { 'role_name': $("#role_name").val(), 'describe': $("#describe").val(), 'permissionList': permissionIds },
+                success: function (result) {
+                    
+                    if (result.code == 0) {
+                        layer.msg('成功!', {
+                            icon: 6,
+                            time: 1000,
+                            shade: 0.3,
+                            end: function () {
+                                // layer自关闭
+                                //当你在iframe页面关闭自身时
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index); //再执行关闭 
+                            }
+                        });
+                    } else {
+                        layer.msg(result.msg);
+                    }
+
+                },
+                error: function () {
+                    layer.msg('系统错误');
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        function getPermissionTree() {
+            $.ajax({
+                url: '{:url("/admin/permission/getTree")}',
+                type: 'get',
+                success: function (result) {
+                    console.log(hasPermissionIds)
+                    tree.render({
+                        elem: '#permission_tree'
+                        , data: result.data
+                        , showCheckbox: true  //是否显示复选框
+                        , id: 'permissionId'  //定义索引
+                        , showLine: true  //是否开启连接线
+                        , isJump: true //是否允许点击节点时弹出新窗口跳转
+                        , click: function (obj) {
+                            var data = obj.data;  //获取当前点击的节点数据
+                            layer.msg('状态：' + obj.state + '<br>节点数据：' + JSON.stringify(data));
+                        }
+                    });
+                    tree.setChecked('permissionId', hasPermissionIds.split(","));
+                },
+                error: function () {
+                    layer.msg('加载权限树失败!')
+                }
+            });
+        }
+
+
+        // 获取选中的树的id
+        function getCheckedId(jsonObj) {
+            var id = "";
+            $.each(jsonObj, function (index, item) {
+                if (id != "") {
+                    id = id + "," + item.id;
+                }
+                else {
+                    id = item.id;
+                }
+                var i = getCheckedId(item.children);
+                if (i != "") {
+                    id = id + "," + i;
+                }
+            });
+            return id;
+        }
+
+
+    })
+
+
+
+
+</script>

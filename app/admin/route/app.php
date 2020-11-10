@@ -29,7 +29,7 @@ Route::get('dashboard', 'DashboardController/index', 'GET');
 // 规则匹配检测的时候默认只是对URL从头开始匹配，只要URL地址开头包含了定义的路由规则就会匹配成功，如果希望URL进行完全匹配，可以在路由表达式最后使用$符号
 Route::get('sysuser$', 'SysUserManagerController/index', 'GET');
 
-Route::any('sysuser/list', 'SysUserManagerController/list', );
+Route::any('sysuser/list', 'SysUserManagerController/list',);
 // 变量用[ ]包含起来后就表示该变量是路由匹配的可选变量。
 Route::get('sysuser/addOrEditSysUserIndex/[:id]', 'SysUserManagerController/addOrEditSysUserIndex');
 
@@ -63,3 +63,23 @@ Route::any('order/list', 'OrderManagerController/list');
 Route::get('order/addOrEditOrderIndex/[:orderId]', 'OrderManagerController/addOrEditOrderIndex', 'GET');
 
 Route::post('order/addOrEditOrder', 'OrderManagerController/addOrEditOrder', 'POST');
+
+// role
+Route::get('role$', 'SysRoleManagerController/index', 'GET');
+
+Route::any('role/list', 'SysRoleManagerController/list');
+
+Route::get('role/addOrEditRoleIndex/[:roleId]', 'SysRoleManagerController/addOrEditRoleIndex', 'GET');
+
+Route::post('role/addOrEditRole', 'SysRoleManagerController/addOrEditRole', 'POST');
+
+// permission
+Route::get('permission$', 'SysPermissionManagerController/index', 'GET');
+
+Route::any('permission/list', 'SysPermissionManagerController/list');
+
+Route::get('permission/addOrEditPermission/[:roleId]', 'SysPermissionManagerController/addOrEditPermissionIndex', 'GET');
+
+Route::post('permission/addOrEditPermission', 'SysPermissionManagerController/addOrEditPermission', 'POST');
+
+Route::get('permission/getTree', 'SysPermissionManagerController/getTree', 'GET');
