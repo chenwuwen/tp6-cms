@@ -5,6 +5,7 @@ namespace app\admin\controller;
 use app\BaseController;
 use app\lib\ResponseResult;
 use app\model\OrderInfoModel;
+use think\facade\Log;
 use think\facade\View;
 
 class OrderManagerController extends BaseController
@@ -18,9 +19,18 @@ class OrderManagerController extends BaseController
 
     public function list()
     {
-        $orderInfo = new OrderInfoModel();
-        $list = $orderInfo->select();
-        $count = $orderInfo->count();
+        $orderInfoModel = new OrderInfoModel;
+        // $_POST函数获取值,需要取到key存在,否则会报错:未定义数组索引:xxx
+        $productNumber = isset($_POST["product_number"]) ? $_POST["product_number"] : '';
+
+        // 以下的两个where是AND的的关系
+        if (is_numeric($productNumber)) {
+            Log::debug("订单查询,productNumber" . $productNumber);
+            $orderInfoModel = $orderInfoModel->where('product_number', 'LIKE', '%' . $productNumber . '%');
+        }
+
+        $count = $orderInfoModel->count();
+        $list = $orderInfoModel->page($_POST["page"], $_POST["limit"])->select();
         return ResponseResult::Success($list, $count);
     }
 

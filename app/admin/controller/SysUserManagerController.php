@@ -15,7 +15,7 @@ class SysUserManagerController extends BaseController
     public function index()
     {
         $roleList = SysRoleModel::select()->toArray();
-        View::assign('roleList', $roleList);
+        View::assign('sysRoleList', $roleList);
         // \dump($roleList);
         return View::fetch("/sys_user/index");
     }
@@ -27,15 +27,13 @@ class SysUserManagerController extends BaseController
     public function list()
     {
         $sysUserManagerService = new SysUserManagerService();
-        $pageNum = input('$page', 0, 'int');
-
-        $pageSize = input('$limit', 30, 'int');
-        $userName = input('$userName', null, 'trim');
-        $roleCode = input('$roleCode', 1, 'int');
-
-        $list = $sysUserManagerService->getSysUserList($userName, $roleCode, $pageNum, $pageSize);
+        $pageNum = input('post.page', 0, 'int');
+        $pageSize = input('post.limit', 30, 'int');
+        $userName = input('post.user_name', '', 'trim');
+        $roleCode = input('post.role_code', 0, 'int');
+        $data = $sysUserManagerService->getSysUserList($userName, $roleCode, $pageNum, $pageSize);
         // \dump($list);
-        return ResponseResult::Success($list, 1);
+        return ResponseResult::Success($data['list'], $data['count']);
     }
 
     /**
@@ -70,12 +68,12 @@ class SysUserManagerController extends BaseController
         try {
             $result = $sysUserManagerService->addOrUpdateSysUser($sysUser);
         } catch (\Exception $e) {
-            return ResponseResult::Error(null,$e->getMessage());
+            return ResponseResult::Error(null, $e->getMessage());
         }
         if ($result) {
             return ResponseResult::Success();
         } else {
-            return ResponseResult::Error(Config::get('ResponseResultStatus.validate_error_code'),"操作失败!");
+            return ResponseResult::Error(Config::get('ResponseResultStatus.validate_error_code'), "操作失败!");
         }
     }
 }

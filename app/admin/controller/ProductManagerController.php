@@ -5,6 +5,7 @@ namespace app\admin\controller;
 use app\BaseController;
 use app\lib\ResponseResult;
 use app\model\ProductInfoModel;
+use think\facade\Log;
 use think\facade\View;
 
 class ProductManagerController extends BaseController
@@ -18,8 +19,25 @@ class ProductManagerController extends BaseController
     public function list()
     {
         $productModel = new ProductInfoModel();
+
+        // $_POST函数获取值,需要取到key存在,否则会报错:未定义数组索引:xxx
+        $productNumber = isset($_POST["product_number"]) ? $_POST["product_number"] : '';
+        $productName = isset($_POST["product_name"]) ? $_POST["product_name"] : '';
+
+        // 以下的两个where是AND的的关系
+        // empty()函数会把0也判断为真,is_numeric()函数判断是否是数字
+        if (is_numeric($productNumber)) {
+            Log::debug("产品信息过滤查询,productNumber:" . $productNumber);
+            $productModel = $productModel->where('product_number', 'LIKE', '%' . $productNumber . '%');
+        }
+        if (!empty($productName)) {
+            Log::debug("产品信息过滤查询,productName:" . $productName);
+            $productModel = $productModel->where('product_name', 'like', '%' . $productName . '%');
+        }
         $count = $productModel->count();
-        $list = $productModel::select();
+        // dump($productModel->getLastSql());
+        // echo $productModel->getLastSql();
+        $list = $productModel->page($_POST["page"], $_POST["limit"])->select();
         return ResponseResult::Success($list, $count);
     }
 

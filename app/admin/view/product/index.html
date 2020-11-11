@@ -1,6 +1,32 @@
 <body>
   <div class="layui-fluid">
     <div class="layui-card">
+
+      <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+
+        <div class="layui-form-item">
+          <div class="layui-inline">
+            <label class="layui-form-label">产品编号</label>
+            <div class="layui-input-block">
+              <input type="text" name="product_number" placeholder="请输入" autocomplete="off" class="layui-input">
+            </div>
+          </div>
+          <div class="layui-inline">
+            <label class="layui-form-label">产品名称</label>
+            <div class="layui-input-block">
+              <input type="text" name="product_name" placeholder="请输入" autocomplete="off" class="layui-input">
+            </div>
+          </div>
+
+          <div class="layui-inline">
+            <button class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="product-search">
+              <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
       <div class="layui-card-body">
         <table id="product_table" lay-filter="product_table"></table>
       </div>
@@ -17,7 +43,7 @@
       var form = layui.form;
 
       //监听搜索
-      form.on('submit(LAY-user-back-search)', function (data) {
+      form.on('submit(product-search)', function (data) {
         var field = data.field;
         console.log("点击搜索按钮")
         console.log(field)
@@ -31,7 +57,7 @@
         url: '{:url("/admin/product/list")}',
         elem: '#product_table',//指定原始表格元素选择器（推荐id选择器）
         toolbar: 'default',
-        type: 'POST',
+        method: 'POST',
         height: 315, //容器高度
         cols: [[                            //设置表头
           { field: 'id', title: 'ID', type: 'checkbox', },
@@ -42,7 +68,7 @@
           { title: '操作', minWidth: 150, templet: "#operatorBar", fixed: "right", align: "center" }
         ]],
         page: true,
-        height: "full-110", //其中110 为距离底部的距离
+        height: "full-150", //其中150 为距离底部的距离
         title: '产品信息表',
         text: "对不起，加载出现异常！"
 

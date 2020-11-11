@@ -20,8 +20,16 @@ class CustomerManagerController extends BaseController
     public function list()
     {
         $customerInfoModel =  new CustomerInfoModel;
-        $count = CustomerInfoModel::count();
-        $list = $customerInfoModel->select();
+        $customer_name = input('post.customer_name', '', 'trim');
+        if (empty($customer_name)) {
+            $list = $customerInfoModel->page($_POST["page"],$_POST["limit"])->select();
+            $count = CustomerInfoModel::count();
+        } else {
+            $list = $customerInfoModel->where('customer_name', 'like', '%'.$customer_name.'%')->page($_POST["page"],$_POST["limit"])->select();
+            $count = $customerInfoModel->where('customer_name', 'like', '%'.$customer_name.'%')->count();
+            
+        }
+        // dump($customerInfoModel->getLastSql());
         return ResponseResult::Success($list, $count);
     }
 

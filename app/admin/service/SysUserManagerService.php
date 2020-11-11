@@ -8,39 +8,46 @@ use app\model\SysUserRole;
 use app\model\SysUserRoleModel;
 use \think\facade\Db;
 
+
 class SysUserManagerService
 {
 
     public function getSysUserList($userName, $roleCode, $pageNum, $pageSize)
     {
+
         // 定义多行字符串
         $sql = <<<sql
-       SELECT
-            a.id,
-            a.user_name,
-            a.user_code,
-            a.create_time,
-            locked,
-            c.role_name 
-        FROM
-            sys_user AS a,
-            sys_user_role AS b,
-            sys_role AS c 
-        WHERE
-            a.id = b.sys_user_id 
-            AND b.sys_role_id = c.id
+        SELECT
+        a.id,
+        a.user_name,
+        a.user_code,
+        a.create_time,
+        locked,
+        c.role_name 
+    FROM
+        sys_user AS a
+        LEFT JOIN sys_user_role AS b ON a.id = b.sys_user_id
+        LEFT JOIN sys_role AS c ON b.sys_role_id = c.id WHERE 1=1
     sql;
 
-        $sql . 'AND c.id=' . $roleCode;
-        if (empty($userName)) {
-            $sql . 'AND a.user_name = ' . $userName;
+        if (!empty($userName)) {
+            $sql = $sql . ' AND a.user_name like ' . '\'%' . $userName . '%\'';
         }
+        // empty()函数会把0也判断为真,因此当参数为0时,不会走if里面的代码
+        if (!empty($roleCode)) {
+            $sql = $sql . ' AND c.id=' . $roleCode;
+        }
+
+        // echo $sql;
+
+        $count = SysUserModel::count();
+        // 拼接分页代码
+        $sql = $sql . ' limit '  . ($pageNum - 1) * $pageSize . ',' . $pageSize;
+
         $userList = Db::query($sql);
-        // $userList = Db::query($sql)->paginate([
-        //     'list_rows'=> 20,
-        //     'var_page' => 'page',
-        // ])->toArray();
-        return $userList;
+
+        $data = ['count' => $count, 'list' => $userList];
+        return $data;
     }
 
 

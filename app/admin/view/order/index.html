@@ -2,6 +2,23 @@
     <div class="layui-fluid">
         <div class="layui-card">
 
+            <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">产品编号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="product_number" placeholder="请输入" autocomplete="off"
+                                class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <button class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="order-search">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
 
             <div class="layui-card-body">
 
@@ -23,8 +40,20 @@
             // 选中状态(checkStatus.data //获取选中行的数据,checkStatus.data.length//获取选中行数量，可作为是否有选中行的条件 checkStatus.isAll //表格是否全选)
             var checkStatus = table.checkStatus('order_table');
 
+
             //监听搜索
             form.on('submit(LAY-user-back-search)', function (data) {
+                var field = data.field;
+                console.log("点击搜索按钮")
+                console.log(field)
+                //执行重载
+                table.reload('order_table', {
+                    where: field
+                });
+            });
+
+            //监听搜索
+            form.on('submit(order-search)', function (data) {
                 var field = data.field;
                 console.log("点击搜索按钮")
                 console.log(field)
@@ -38,7 +67,7 @@
                 url: '{:url("/admin/order/list")}',
                 elem: '#order_table',//指定原始表格元素选择器（推荐id选择器）
                 toolbar: 'default',
-                type: 'POST',
+                method: 'POST',
                 height: 315, //容器高度
                 cols: [[                            //设置表头
                     { field: 'id', title: 'ID', type: 'checkbox', },
@@ -60,7 +89,7 @@
                     { field: 'create_time', title: '创建时间', align: "center", },
                 ]],
                 page: true,
-                height: "full-110", //其中110 为距离底部的距离
+                height: "full-150", //其中150 为距离底部的距离
                 title: '用户数据表',
                 text: "对不起，加载出现异常！"
 
