@@ -56,7 +56,7 @@
             </a>
             <dl class="layui-nav-child">
               <dd><a lay-href="set/user/info.html">基本资料</a></dd>
-              <dd><a lay-href="set/user/password.html">修改密码</a></dd>
+              <dd><a lay-href='{:url("/admin/sysuser/updatePassword")}'>修改密码</a></dd>
               <hr>
               <dd layadmin-event="logout" style="text-align: center;"><a href='{:url("/admin/logout")}'>退出</a></dd>
             </dl>
@@ -90,28 +90,7 @@
               </a>
             </li>
 
-            <li data-name="home1" class="layui-nav-item">
-              <a href="javascript:;" lay-tips="业务" lay-direction="2">
-                <i class="layui-icon layui-icon-home"></i>
-                <cite>业务</cite>
-                <span class="layui-nav-more"></span></a>
-              <dl class="layui-nav-child">
-                <dd data-name="console">
-                  <a lay-href='{:url("/admin/customer")}'>客户管理</a>
-                </dd>
-                <dd data-name="console">
-                  <a lay-href='{:url("/admin/product")}'>产品信息</a>
-                </dd>
-                <dd data-name="console">
-                  <a lay-href='{:url("/admin/order")}'>订单管理</a>
-                </dd>
-              </dl>
-            </li>
-
-
-
-
-            <li data-name="user" class="layui-nav-item">
+            <!-- <li data-name="user" class="layui-nav-item">
               <a href="javascript:;" lay-tips="用户" lay-direction="2">
                 <i class="layui-icon layui-icon-user"></i>
                 <cite>管理员</cite>
@@ -125,7 +104,31 @@
                   <a lay-href='{:url("/admin/role")}'>角色管理</a>
                 </dd>
               </dl>
+            </li> -->
+
+
+            {volist name="permissionList" id="permission"}
+            {if condition="($permission.type == 1)"}
+            <li class="layui-nav-item">
+              <a href="javascript:;" lay-tips="{$permission.name}" lay-direction="2">
+                <i class="{$permission.icon}"></i>
+                <cite>{$permission.name}</cite>
+                <span class="layui-nav-more"></span></a>
+              <dl class="layui-nav-child">
+                {volist name="permissionList" id="subPermission"}
+                {if condition="($subPermission.parentid == $permission.id)"}
+                <dd data-name="console">
+                  <a lay-href='{$subPermission.url}'>{$subPermission.name}</a>
+                </dd>
+                {/if}
+                {/volist}
+              </dl>
             </li>
+            {/if}
+            {/volist}
+
+
+
 
             <li data-name="set" class="layui-nav-item">
               <a href="javascript:;" lay-tips="设置" lay-direction="2">

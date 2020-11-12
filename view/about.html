@@ -1,7 +1,23 @@
-
+<link rel="stylesheet" href="{__STATIC_PATH}/layui/css/layui.css" media="all" />
 
 <div class="layui-container">
     <div class="layui-row">
-        {:phpinfo()}
+        <!-- 调用自定义方法并赋值给变量 -->
+        <!-- https://www.cnblogs.com/xiaobaidoit/p/5582264.html -->
+        {~$infoList=getSystemEnv()}
+
+        <table class="layui-table" style="margin: 0;">
+            <tbody>
+                {volist name="infoList" id = "info"}
+                <tr>
+                    <!-- 输出数组的key和value -->
+                    <td>{$Think.lang.$key}</td>
+                    <td>{$info}</td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
+
     </div>
-  </div> 
+</div>
+

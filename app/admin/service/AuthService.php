@@ -40,7 +40,7 @@ class AuthService
     }
 
     /**
-     * 得到盐值
+     * 得到盐值,盐值是根据用户名MD5得来的,以后不会更改,验证密码是通过密码+盐值做MD5来验证的
      */
     public static function getSalt($username)
     {
@@ -59,10 +59,11 @@ class AuthService
         $role = Db::name('sys_user_role')->alias('a')
             ->join('sys_role b', 'a.sys_role_id=b.id')
             ->field('b.role_name')
+            ->where('a.sys_user_id', $user['id'])
             ->select()
             ->toArray();
         // halt($role);
-      
+
         // 使用原生查询
 
         $permission = Db::query("SELECT c.* FROM  

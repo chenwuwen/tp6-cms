@@ -79,7 +79,9 @@
                 page: true,
                 height: "full-150", //其中150 为距离底部的距离
                 title: '客户信息数据表',
-                text: "对不起，加载出现异常！"
+                text: {
+                    none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                }
 
             });
             //监听事件toolbar(table元素的id属性值lay-filter="对应的值")

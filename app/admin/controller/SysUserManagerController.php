@@ -3,9 +3,11 @@
 namespace app\admin\controller;
 
 use app\admin\service\SysUserManagerService;
+use app\admin\service\AuthService;
 use app\BaseController;
 use app\lib\ResponseResult;
 use app\model\SysRoleModel;
+use app\model\SysUserModel;
 use think\facade\View;
 use think\facade\Config;
 
@@ -74,6 +76,29 @@ class SysUserManagerController extends BaseController
             return ResponseResult::Success();
         } else {
             return ResponseResult::Error(Config::get('ResponseResultStatus.validate_error_code'), "操作失败!");
+        }
+    }
+
+    /**
+     * 修改管理员密码
+     */
+    public function updatePassword()
+    {
+        $userDetail =  session(ADMIN_SESSION_KEY);
+        $userId = $userDetail['user_id'];
+        $userInfo = SysUserModel::find($userId);
+        //    原密码
+        $oldPassword = $_POST['oldPassword'];
+        $pass = \md5($oldPassword . $userInfo['salt']);
+        if ($pass == $userInfo['password']) {
+            $newPassword = $_POST['password'];
+            $newPass = \md5($newPassword . $userInfo['salt']);
+            SysUserModel::update(['password' => $newPass, 'id' => $userId]);
+            // 修改密码成功清除Session,重新登录
+            session(ADMIN_SESSION_KEY, null);
+            return ResponseResult::Success();
+        } else {
+            return ResponseResult::Error(Config::get('ResponseResultStatus.validate_error_code'), '原密码错误!');
         }
     }
 }

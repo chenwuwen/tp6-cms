@@ -25,7 +25,7 @@ Route::get('logout', 'AuthController/logout', 'GET');
 Route::get('dashboard', 'DashboardController/index', 'GET');
 
 
-
+// sysuser
 // 规则匹配检测的时候默认只是对URL从头开始匹配，只要URL地址开头包含了定义的路由规则就会匹配成功，如果希望URL进行完全匹配，可以在路由表达式最后使用$符号
 Route::get('sysuser$', 'SysUserManagerController/index', 'GET');
 
@@ -34,6 +34,13 @@ Route::any('sysuser/list', 'SysUserManagerController/list',);
 Route::get('sysuser/addOrEditSysUserIndex/[:id]', 'SysUserManagerController/addOrEditSysUserIndex');
 
 Route::post('sysuser/addOrEditSysUser', 'SysUserManagerController/addOrEditSysUser');
+
+Route::post('sysuser/updatePassword', 'SysUserManagerController/updatePassword');
+
+// 直接返回模板
+Route::view('sysuser/updatePassword', 'password');
+
+
 
 // customer
 Route::get('customer$', 'CustomerManagerController/index', 'GET');

@@ -19,3 +19,4 @@ Route::post('upload', 'UploadController/upload');
 // 路由到模板文件
 Route::view('system/about', 'about');
 
+
