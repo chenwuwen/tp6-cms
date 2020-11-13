@@ -1,6 +1,8 @@
 <?php
+
 namespace app\admin;
 
+use app\lib\ResponseResult;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
 use think\exception\Handle;
@@ -42,7 +44,7 @@ class AdminExceptionHandle extends Handle
 
     /**
      * Render an exception into an HTTP response.
-     *
+     * 不可预知的内容异常处理
      * @access public
      * @param \think\Request   $request
      * @param Throwable $e
@@ -51,6 +53,16 @@ class AdminExceptionHandle extends Handle
     public function render($request, Throwable $e): Response
     {
         // 添加自定义异常处理机制
+
+        // 判断是否是Ajax请求
+        if ($request->isAjax()) {
+            // 判断方法是否存在
+            if (method_exists($e, 'getStatusCode')) {
+                return ResponseResult::Error(null, '错误信息：' . $e->getMessage());
+            } else {
+                return ResponseResult::Error(null, '错误信息：' . $e->getMessage());
+            }
+        }
 
         // 其他错误交给系统处理
         return parent::render($request, $e);

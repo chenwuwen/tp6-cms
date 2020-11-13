@@ -42,10 +42,14 @@ class AuthController extends BaseController
                 return ResponseResult::Error();
             }
             if (!empty($result)) {
-                session(ADMIN_SESSION_KEY,$result);
-                
-                // 登陆成功
-                return ResponseResult::Success();
+                // 判断用户是否启用
+                if ($result['available'] == 1) {
+                    session(ADMIN_SESSION_KEY, $result);
+                    // 登陆成功
+                    return ResponseResult::Success();
+                } else {
+                    return ResponseResult::Error(Config::get('ResponseResultStatus.validate_error_code'), '该用户未启用');
+                }
             }
             // 登陆失败
             return ResponseResult::Error();

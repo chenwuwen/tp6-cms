@@ -8,6 +8,7 @@ use app\BaseController;
 use app\lib\ResponseResult;
 use app\model\SysRoleModel;
 use app\model\SysUserModel;
+use app\model\SysUserRoleModel;
 use think\facade\View;
 use think\facade\Config;
 
@@ -66,6 +67,19 @@ class SysUserManagerController extends BaseController
         $sysUser = request()->param();
         $sysUserManagerService = new SysUserManagerService();
 
+        // if ($sysUser['available'] == 'on') {
+        //     $sysUser['available'] = 1;
+        // } else {
+        //     $sysUser['available'] = 0;
+        // }
+
+        // layui checkbox 的switch 当未选中状态时,是不传参数的,当为选中状态时,传递的参数的值为 on
+        if (isset($sysUser['available'])) {
+            $sysUser['available'] = 1;
+        } else {
+            $sysUser['available'] = 0;
+        }
+
         // \dump($sysUser);
         try {
             $result = $sysUserManagerService->addOrUpdateSysUser($sysUser);
@@ -100,5 +114,19 @@ class SysUserManagerController extends BaseController
         } else {
             return ResponseResult::Error(Config::get('ResponseResultStatus.validate_error_code'), '原密码错误!');
         }
+    }
+
+    /**
+     * 删除
+     */
+    public function deleteSysUser()
+    {
+        $idStr = request()->param('ids');
+    
+        $ids = explode("_", $idStr);
+        SysUserModel::destroy($ids);
+        // dump(SysUserModel::getlastsql());
+        SysUserRoleModel::where('sys_user_id', 'in', $ids)->delete();
+        return ResponseResult::Success();
     }
 }

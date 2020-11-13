@@ -22,7 +22,7 @@ class SysUserManagerService
         a.user_name,
         a.user_code,
         a.create_time,
-        locked,
+        a.available,
         c.role_name 
     FROM
         sys_user AS a
@@ -59,38 +59,54 @@ class SysUserManagerService
         $sysRole = SysUserRoleModel::where('sys_user_id', $id)->field('sys_role_id')->find()->toArray();
         // \dump($sysRole);
         $user['sys_role_id'] = $sysRole['sys_role_id'];
-        \dump($user);
+        // \dump($user);
         return $user;
     }
 
-    public function addOrUpdateSysUser($user)
+    /**
+     * 自动识别
+     * 我们已经看到，模型的新增和更新方法都是save方法，系统有一套默认的规则来识别当前的数据需要更新还是新增。
+     * 实例化模型后调用save方法表示新增；
+     * 查询数据后调用save方法表示更新；
+     * 不要在一个模型实例里面做多次更新，会导致部分重复数据不再更新，正确的方式应该是先查询后更新或者使用模型类的update方法更新。
+     */
+    public function addOrUpdateSysUser($userParam)
     {
-        if (empty($user['id'])) {
-            $user['create_time'] = date("Y-m-d H:i:s");
-        }
-        $user['update_time'] = date("Y-m-d H:i:s");
-
-        $salt = AuthService::getSalt($user['user_name']);
-        $pass = AuthService::encryption($user['user_name'], $user['password']);
-        $user['password'] = $pass;
-        $user['salt'] = $salt;
+        $userParam['update_time'] = date("Y-m-d H:i:s");
         $sysUser = new SysUserModel;
+        if (empty($userParam['id'])) {
+            $userParam['create_time'] = date("Y-m-d H:i:s");
+            $salt = AuthService::getSalt($userParam['user_name']);
+            $pass = AuthService::encryption($userParam['user_name'], $userParam['password']);
+            $userParam['password'] = $pass;
+            $userParam['salt'] = $salt;
+
+            // 保存sys_user表
+            $sysUser->save([
+                'user_code' => $userParam['user_code'],
+                'user_name' => $userParam['user_name'],
+                'password' => $userParam['password'],
+                'salt' => $userParam['salt'],
+                'create_time' => $userParam['create_time'],
+                'update_time' => $userParam['update_time'],
+            ]);
+        } else {
+            $userDetail = SysUserModel::find($userParam['id']);
+            $salt = $userDetail['salt'];
+            if ($userParam['password'] != $userDetail['password']) {
+                $userParam['password'] = md5($userParam['password'], $salt);
+            }
+            $userDetail->save($userParam);
+        }
         // \dump($user);
-        // 保存sys_user表
-        $sysUser->save([
-            'user_code' => $user['user_code'],
-            'user_name' => $user['user_name'],
-            'password' => $user['password'],
-            'salt' => $user['salt'],
-            'create_time' => $user['create_time'],
-            'update_time' => $user['update_time'],
-        ]);
         // \dump($sysUser->getLastSql());
-        // 获取自增ID
-        $user_id = $sysUser->id;
+        // 获取自增ID,获取参数传递过来的ID
+        $user_id = empty($userParam['id']) ? $sysUser->id : $userParam['id'];
         $sysUserRole = new SysUserRoleModel();
+        // 删除用户角色表数据
+        $sysUserRole->where('sys_user_id', $user_id)->delete();
         $sysUserRole->sys_user_id =  $user_id;
-        $sysUserRole->sys_role_id =  $user['role'];
+        $sysUserRole->sys_role_id =  $userParam['role'];
         $sysUserRole->save();
         return true;
     }

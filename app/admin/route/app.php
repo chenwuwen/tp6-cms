@@ -39,6 +39,8 @@ Route::post('sysuser/updatePassword', 'SysUserManagerController/updatePassword')
 
 // 直接返回模板
 Route::view('sysuser/updatePassword', 'password');
+// ids类型的参数,如果是多个不能以逗号和中横线分隔,否则只会读取第一个
+Route::get('sysuser/delete/:ids', 'SysUserManagerController/deleteSysUser');
 
 
 

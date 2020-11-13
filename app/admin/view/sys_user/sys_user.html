@@ -9,14 +9,14 @@
     <div class="layui-form-item">
         <label class="layui-form-label">登录名</label>
         <div class="layui-input-inline">
-            <input type="text" value='{$userDetail.user_code}' name="user_code" lay-verify="user_code"
+            <input type="text" value='{$userDetail.user_code}' {$userDetail.user_code == ''?'':'disabled class="layui-input layui-disabled"'} name="user_code" lay-verify="user_code"
                 placeholder="请输入登录名" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">密码</label>
         <div class="layui-input-inline">
-            <input type="password" name="password" lay-verify="password" placeholder="密码" autocomplete="off"
+            <input type="password" name="password" value='{$userDetail.password}' lay-verify="password" placeholder="密码" autocomplete="off"
                 class="layui-input">
         </div>
     </div>
@@ -46,9 +46,9 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">审核状态</label>
+        <label class="layui-form-label">状态</label>
         <div class="layui-input-inline">
-            <input type="checkbox" lay-filter="switch" name="switch" lay-skin="switch" lay-text="通过|待审核">
+            <input type="checkbox" lay-filter="switch" {$userDetail.available == 1? 'checked' : ''}  name="available" lay-skin="switch" lay-text="启用|禁用">
         </div>
     </div>
     <div class="layui-form-item">

@@ -44,9 +44,6 @@
         layui.use(['jquery', 'form', 'element', 'table'], function () {
             var table = layui.table;
             var form = layui.form;
-            // 选中状态(checkStatus.data //获取选中行的数据,checkStatus.data.length//获取选中行数量，可作为是否有选中行的条件 checkStatus.isAll //表格是否全选)
-            var checkStatus = table.checkStatus('sys_user_table');
-
             //监听搜索
             form.on('submit(user-search)', function (data) {
                 var field = data.field;
@@ -70,6 +67,11 @@
                     { field: 'user_name', title: '用户名', align: "center", },
                     { field: 'user_code', title: '登录名', align: "center", },
                     { field: 'role_name', title: '角色', align: "center", },
+                    {
+                        field: 'available', title: '状态', align: "center", templet: function (d) {
+                            return d.locked == 0 ? '未启用' : '已启用';
+                        }
+                    },
                     { field: 'create_time', title: '创建时间', align: "center", },
                 ]],
                 page: true,
@@ -100,7 +102,33 @@
                         });
                         break;
                     case 'delete':
-                        layer.msg('删除');
+                        let idList = []
+                        checkStatus.data.forEach(element => {
+                            idList.push(element.id)
+                        });
+                        layer.msg('确定要删除吗?', {
+                            time: 0 //不自动关闭
+                            , btn: ['确定', '取消']
+                            , yes: function (index) {
+                                $.ajax({
+                                    url: '{:url("/admin/sysuser/delete/")}' + idList.join('_'),
+                                    type: 'get',
+                                    success: function (result) {
+                                        if (result.code == 0) {
+
+                                        } else {
+                                            layer.msg(result.msg);
+                                        }
+
+                                    },
+                                    error: function () {
+                                        layer.msg('系统错误');
+                                    }
+                                });
+                                layer.close(index);
+                            }
+                        });
+
                         break;
                     case 'update':
                         if (checkStatus.data.length == 1) {

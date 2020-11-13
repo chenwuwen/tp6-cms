@@ -15,10 +15,10 @@ class AuthService
     {
         // 查询数据不存在的时候返回空数组
         $sysUser = SysUserModel::where('user_code', $usercode)->findOrEmpty();
+        // echo $sysUser;
         if ($sysUser->isEmpty()) {
             throw new \think\exception\ValidateException("登录名不存在");
         }
-
         $tmpPass = md5($password . $sysUser['salt']);
         if ($tmpPass == $sysUser['password']) {
             $userDetail = self::getUserDetail($sysUser);
@@ -73,11 +73,11 @@ class AuthService
         // halt($permission);
         $userDetail = [
             'user_id' => $user['id'],
+            'available' => $user['available'],
             'user_name' => $user['user_name'],
             'role' => $role,
             'permission' => $permission,
         ];
-
         return $userDetail;
     }
 }
