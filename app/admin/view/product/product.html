@@ -62,11 +62,10 @@
 </form>
 </div>
 <script>
-  layui.use(['jquery', 'form', 'element', 'table'], function () {
+  layui.use(['jquery', 'form', 'element'], function () {
     var $ = layui.jquery
       , form = layui.form;
-    // 选中状态(checkStatus.data //获取选中行的数据,checkStatus.data.length//获取选中行数量，可作为是否有选中行的条件 checkStatus.isAll //表格是否全选)
-    var checkStatus = table.checkStatus('sys_user_table');
+
     //自定义验证规则
     form.verify({
       user_code: function (value) {

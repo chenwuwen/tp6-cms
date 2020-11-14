@@ -58,4 +58,13 @@ class OrderManagerController extends BaseController
         }
         return ResponseResult::Error();
     }
+
+    public function deleteOrder()
+    {
+        $idStr = request()->param("ids");
+        $ids = explode('_', $idStr);
+        // 这里的删除是使用了Tp的软删除功能,在模型中配置的
+        OrderInfoModel::destroy($ids);
+        return ResponseResult::Success();
+    }
 }

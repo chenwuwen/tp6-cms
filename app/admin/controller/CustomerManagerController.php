@@ -62,4 +62,13 @@ class CustomerManagerController extends BaseController
             return ResponseResult::Error(null, $e->getMessage());
         }
     }
+
+    public function deleteCustomer()
+    {
+        $idStr = request()->param("ids");
+        $ids = explode('_', $idStr);
+        // 这里的删除是使用了Tp的软删除功能,在模型中配置的
+        CustomerInfoModel::destroy($ids);
+        return ResponseResult::Success();
+    }
 }
