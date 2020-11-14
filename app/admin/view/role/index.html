@@ -83,19 +83,39 @@
                 if (checkData.length === 0) {
                     return layer.msg('请选择数据');
                 }
-
-                layer.confirm('确定删除吗？', function (index) {
-
-                    //执行 Ajax 后重载
-                    /*
-                    admin.req({
-                      url: 'xxx'
-                      //,……
-                    });
-                    */
-                    table.reload('role_table');
-                    layer.msg('已删除');
+                let idList = []
+                checkStatus.data.forEach(element => {
+                    idList.push(element.id)
                 });
+                layer.confirm('确定要删除吗？', {
+                    title: '警告',
+                    skin: '',
+                    icon: 3,
+                    btn: ['确定', '取消'] //按钮
+                }, function () {
+                    // 关闭layer.confirm()弹窗,layer.confirm()弹窗的关闭与layer.open()不太一样
+                    layer.close(layer.index)
+                    var loading = layer.load(1, {
+                        shade: [0.1, '#fff'] //0.1透明度的白色背景
+                    });
+                    $.ajax({
+                        url: '{:url("/admin/role/delete/")}' + idList.join('_'),
+                        type: 'get',
+                        success: function (result) {
+                            if (result.code == 0) {
+                                layer.close(loading);
+                                table.reload("role_table", { where: {}, page: { curr: 1 } })
+                            } else {
+                                layer.close(loading);
+                                layer.msg(result.msg);
+                            }
+                        },
+                        error: function () {
+                            layer.close(loading);
+                            layer.msg('系统错误');
+                        }
+                    });
+                })
             },
             add: function () {
                 layer.open({

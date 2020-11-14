@@ -8,6 +8,8 @@ use think\facade\View;
 use app\lib\ResponseResult;
 use app\model\SysPermissionModel;
 use app\model\SysRolePermissionModel;
+use app\model\SysUserRoleModel;
+use think\facade\Config;
 
 class SysRoleManagerController extends BaseController
 {
@@ -73,6 +75,23 @@ class SysRoleManagerController extends BaseController
         }
 
         $sysRolePermissionModel->saveAll($permissionRoleList);
+        return ResponseResult::Success();
+    }
+
+
+    /**
+     * 删除 删除角色的同时,也把角色与权限的关联关系也删除了
+     */
+    public function deleteRole()
+    {
+        $idStr = request()->param("ids");
+        $ids = explode('_', $idStr);
+        $tmpData = SysUserRoleModel::where('sys_role_id', 'in', $ids)->select()->toArray();
+        if (count($tmpData) > 0) {
+            return ResponseResult::Error(Config::get('ResponseResultStatus.validate_error_code'), "当前角色已关联到用户,需要先移除用户才能进行操作");
+        }
+        SysRoleModel::destroy($ids);
+        SysRolePermissionModel::where('sys_role_id', 'in', $ids)->delete();
         return ResponseResult::Success();
     }
 }

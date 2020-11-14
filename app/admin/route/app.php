@@ -88,6 +88,8 @@ Route::get('role/addOrEditRoleIndex/[:roleId]', 'SysRoleManagerController/addOrE
 
 Route::post('role/addOrEditRole', 'SysRoleManagerController/addOrEditRole', 'POST');
 
+Route::get('role/delete/:ids', 'SysRoleManagerController/deleteRole', 'GET');
+
 // permission
 Route::get('permission$', 'SysPermissionManagerController/index', 'GET');
 

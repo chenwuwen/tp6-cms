@@ -117,12 +117,12 @@ class SysUserManagerController extends BaseController
     }
 
     /**
-     * 删除
+     * 删除,删除用户的同时,也将用户和角色关联的关系删除了
      */
     public function deleteSysUser()
     {
         $idStr = request()->param('ids');
-    
+
         $ids = explode("_", $idStr);
         SysUserModel::destroy($ids);
         // dump(SysUserModel::getlastsql());
