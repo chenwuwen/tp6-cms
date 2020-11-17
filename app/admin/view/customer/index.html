@@ -70,7 +70,11 @@
                     { field: 'ticket', title: '收票人', align: "center", },
                     {
                         field: 'data', title: '附件', align: "center", templet: function (d) {
-                            return '<div><a onclick="window.download(\'' + d.ticket_data + '\')" class="layui-table-link" >下载</a></div>'
+                            if (d.ticket_data == '') {
+                                return '<div>未上传附件</div>'
+                            } else {
+                                return '<div><a style="cursor:pointer" onclick="window.download(\'' + d.ticket_data + '\')" class="layui-table-link" >下载</a></div>'
+                            }
                         }
                     },
                     { field: 'update_time', title: '更新时间', align: "center", },
@@ -237,8 +241,8 @@
         function download(url) {
             // 添加一个a标签
             let ele = document.createElement('a')
-            // 给a标签加入下载地址
-            ele.download = "../dot9tools.zip"
+            // 设置下载后的文件名
+            ele.download = url.substr(url.lastIndexOf('/') + 1)
             // 隐藏a标签
             ele.style.display = 'none'
             // 给a标签加入地址
