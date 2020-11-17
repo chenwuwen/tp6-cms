@@ -159,25 +159,47 @@
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
 
+        // layui upload组件上传时,多次选择文件重复上传解决： https://blog.csdn.net/u014598014/article/details/90559211
+        let UPLOAD_FILES;
+        let Loading_Index;
         var uploadInst = upload.render({
             elem: '#test1',  //绑定元素
             url: '{:url("/upload")}',  //上传接口
             auto: true, //自动上传
-            accept: '*',
+            accept: 'file',
             multiple: false, //是否允许多文件上传
+            before: function (obj) { //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                Loading_Index =  layer.load(); //上传loading
+            },
             choose: function (obj) {
-                var files = obj.pushFile();
-                console.log(files)
+                // 将每次选择的文件追加到文件队列
+                UPLOAD_FILES = obj.pushFile();
+                // console.log(UPLOAD_FILES)
+                var property = "";
+                for (var item in obj) {
+                    property += "属性：" + item + "数值：" + obj[item] + "\n";
+                }
+                console.log(property)
                 obj.preview(function (index, file, result) {
+                    // 重命名文件名
+                    // obj.resetFile(index, file, '123.jpg');
                     $("#file_name").html(file.name)
                 })
             },
-            done: function (res) {
+            done: function (res, index, upload) { // res（服务端响应信息）、index（当前文件的索引）、upload（重新上传的方法，一般在文件上传失败后使用）
                 //上传完毕回调
                 console.log(res)
                 $("#ticket_data").val(res.data)
+                //删除数组文件中上传成功的图片，防止重复上传（重点）
+                delete UPLOAD_FILES[index]
+                layer.close(Loading_Index); //关闭loading
+
             },
-            error: function () {
+            error: function (index, upload) {
+                //删除数组文件中上传成功的图片，防止重复上传（重点）
+                delete UPLOAD_FILES[index]
+                //当上传失败时，你可以生成一个“重新上传”的按钮，点击该按钮时，执行 upload() 方法即可实现重新上传
+                layer.close(Loading_Index); //关闭loading
                 //请求异常回调
                 layer.alert('上传附件失败!')
             }

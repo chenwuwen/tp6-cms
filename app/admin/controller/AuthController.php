@@ -37,9 +37,9 @@ class AuthController extends BaseController
                     //    验证失败
                     return ResponseResult::Error(Config::get('ResponseResultStatus.validate_error_code'), $e->getError());
                 }
-                halt($e);
+                // halt($e);
                 //    系统错误  
-                return ResponseResult::Error();
+                return ResponseResult::Error(null,$e->getMessage());
             }
             if (!empty($result)) {
                 // 判断用户是否启用
