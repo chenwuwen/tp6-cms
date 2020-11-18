@@ -14,7 +14,7 @@
       <div class="layui-inline">
         <label class="layui-form-label">产品编号</label>
         <div class="layui-input-inline">
-          <input type="text" name="product_number" value='{$productInfo.product_number}' lay-verify="required"
+          <input type="text" name="product_number" value='{$productInfo.product_number}' {$productInfo.product_number == ''?'':'disabled class="layui-input layui-disabled"'} lay-verify="required"
             autocomplete="off" class="layui-input">
         </div>
       </div>

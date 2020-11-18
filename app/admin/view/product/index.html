@@ -33,9 +33,7 @@
     </div>
   </div>
 
-  <script type="text/html" id="operatorBar">
-<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-</script>
+
 
   <script>
     layui.use(['jquery', 'form', 'element', 'table'], function () {
@@ -64,9 +62,9 @@
           { field: 'id', title: 'ID', type: 'checkbox', },
           { field: 'product_number', title: '产品编号', align: "center", },
           { field: 'product_name', title: '产品名称', align: "center", },
+          { field: 'product_model', title: '规格型号', align: "center", },
           { field: 'special_request', title: '特殊要求', align: "center", },
           { field: 'update_time', title: '更新时间', align: "center", },
-          { title: '操作', minWidth: 150, templet: "#operatorBar", fixed: "right", align: "center" }
         ]],
         page: true,
         height: "full-150", //其中150 为距离底部的距离

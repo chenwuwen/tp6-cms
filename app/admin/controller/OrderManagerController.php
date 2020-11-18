@@ -5,8 +5,10 @@ namespace app\admin\controller;
 use app\BaseController;
 use app\lib\ResponseResult;
 use app\model\OrderInfoModel;
+use app\model\ProductInfoModel;
 use think\facade\Log;
 use think\facade\View;
+use think\facade\Config;
 
 class OrderManagerController extends BaseController
 {
@@ -50,6 +52,17 @@ class OrderManagerController extends BaseController
     public function addOrEditOrder()
     {
         $order = request()->param();
+        $product_number = $order['product_number'];
+        $order_number = $order['order_number'];
+        // 先查看产品编号是否存在
+        $product = ProductInfoModel::where('product_number', $product_number)->find();
+        if (empty($product)) {
+            return ResponseResult::Error(Config::get('ResponseResultStatus.validate_error_code'), '产品信息不存在!');
+        }
+        if(empty($order_number)){
+            // 自动生成订单编号
+            $order['order_number'] = get_sn();
+        }
         $orderInfoModel = new OrderInfoModel();
         // dump($order);
         $result = $orderInfoModel->save($order);
