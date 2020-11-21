@@ -1,0 +1,241 @@
+<body>
+    
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <table id="customer_receive_table" lay-filter="customer_receive_table"></table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+
+<script type="text/html" id="template">
+    <div class="layui-fluid">
+<form class="layui-form" action="" lay-filter="component-form-group">
+    <div class="layui-form-item" style="display: none">
+        <input name="id" value='{{d.id||""}}'>
+        <input name="customer_id" value='{{d.customer_id||""}}'>
+    
+    </div>
+<div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">收货单位</label>
+            <div class="layui-input-inline">
+                <input type="text"  name="recipient_company" value='{{d.recipient_company||""}}'
+                    lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">收货地址</label>
+            <div class="layui-input-inline">
+                <input type="text" value='{{d.recipient_address||""}}'  name="recipient_address"
+                    class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">收货电话</label>
+            <div class="layui-input-inline">
+                <input type="text"  name="recipient_phone" lay-verify="phone" value='{{d.recipient_phone||""}}'
+                    autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">收货人</label>
+            <div class="layui-input-inline">
+                <input type="text" name="recipient" autocomplete="off"
+                    class="layui-input" value='{{d.recipient||""}}' >
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">收票地址</label>
+            <div class="layui-input-inline">
+                <input type="text"  name="ticket_address" value='{{d.ticket_address||""}}' class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+
+        <div class="layui-inline">
+            <label class="layui-form-label">收票电话</label>
+            <div class="layui-input-inline">
+                <input type="tel"  name="ticket_phone" value='{{d.ticket_phone||""}}' class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">收票人</label>
+            <div class="layui-input-inline">
+                <input type="text" name="ticket" value='{{d.ticket||""}}' class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <div class="layui-footer">
+                <button class="layui-btn" lay-submit="" lay-filter="component-form-customer-receive">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+</script>
+<script>
+    layui.use(['form', 'laytpl', 'element', 'upload', 'table'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var laytpl = layui.laytpl;
+        var upload = layui.upload;
+        var element = layui.element;
+        var customerId = '{$customerId}'
+        table.render({
+            url: '{:url("/admin/customer/receive/list/")}' + customerId,
+            elem: '#customer_receive_table',//指定原始表格元素选择器（推荐id选择器）
+            toolbar: 'default',
+            method: 'GET',
+            height: 315, //容器高度
+            cols: [[                            //设置表头
+                { field: 'id', title: 'ID', type: 'checkbox', },
+                { field: 'customer_id', title: '客户ID', align: "center", hide: true },
+                { field: 'recipient_company', title: '收货单位名称', align: "center", },
+                { field: 'recipient', title: '收货人', align: "center", },
+                { field: 'recipient_phone', title: '收货电话', align: "center", },
+                { field: 'recipient_address', title: '收货地址', align: "center", },
+                { field: 'ticket', title: '收票人', align: "center", },
+                { field: 'ticket_phone', title: '收票电话', align: "center", },
+                { field: 'ticket_address', title: '收票地址', align: "center", },
+
+            ]],
+            height: "full-150", //其中150 为距离底部的距离
+            title: '客户收货数据表',
+            text: {
+                none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+            }
+
+        });
+
+        //监听事件toolbar(table元素的id属性值lay-filter="对应的值")
+        table.on('toolbar(customer_receive_table)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'add':   //添加操作
+
+                    // 这里使用layui的模板引擎进行赋值
+                    var render_form = laytpl($("#template").html()).render({
+                        customer_id: customerId
+                    });
+                    layer.open({
+                        type: 1,
+                        area: ['50rem', '50%'],
+                        title: '添加收货地址信息',
+                        closeBtn: 1,
+                        anim: 1,
+                        shadeClose: false,
+                        skin: 'yourclass',
+                        content: render_form,
+                    });
+                    break;
+                case 'delete':
+                    if (checkStatus.data.length == 0) {
+                        layer.msg('请至少选择一行删除!');
+                        return
+                    }
+                    let idList = []
+                    checkStatus.data.forEach(element => {
+                        idList.push(element.id)
+                    });
+                    layer.confirm('确定要删除吗？', {
+                        title: '警告',
+                        skin: '',
+                        icon: 3,
+                        btn: ['确定', '取消'] //按钮
+                    }, function () {
+                        // 关闭layer.confirm()弹窗,layer.confirm()弹窗的关闭与layer.open()不太一样
+                        layer.close(layer.index)
+                        var loading = layer.load(1, {
+                            shade: [0.1, '#fff'] //0.1透明度的白色背景
+                        });
+                        $.ajax({
+                            url: '{:url("/admin/customer/receive/delete/")}' + idList.join('_'),
+                            type: 'get',
+                            success: function (result) {
+                                if (result.code == 0) {
+                                    layer.close(loading);
+                                    table.reload("customer_receive_table", { where: {}, page: { curr: 1 } })
+                                } else {
+                                    layer.close(loading);
+                                    layer.msg(result.msg);
+                                }
+                            },
+                            error: function () {
+                                layer.close(loading);
+                                layer.msg('系统错误');
+                            }
+                        });
+
+                    }, function () {
+                        // layer.msg('已取消');
+                    });
+                    break;
+                case 'update':
+                    if (checkStatus.data.length == 1) {
+                        console.log(checkStatus.data[0])
+                        var render_form = laytpl($("#template").html()).render(checkStatus.data[0]);
+                        layer.open({
+                            type: 1,
+                            area: ['25rem', '25rem'],
+                            title: '编辑收货信息',
+                            closeBtn: 1,
+                            anim: 1,
+                            shadeClose: false,
+                            skin: 'yourclass',
+                            content: render_form
+                        })
+                    } else {
+                        layer.msg('请选择一行作为编辑对象!');
+                    }
+                    break;
+            };
+        });
+
+
+        form.on('submit(component-form-customer-receive)', function (data) {
+            console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+            console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+            $.ajax({
+                url: '{:url("/admin/customer/receive/addOrEditCustomerReceive")}',
+                type: 'post',
+                data: data.field,
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.msg('成功!', {
+                            icon: 6,
+                            time: 1000,
+                            shade: 0.3,
+                            end: function () {
+                                // https://www.cnblogs.com/youmingkuang/p/12287546.html
+                                layer.closeAll();
+                                table.reload("customer_receive_table", { where: {}, page: { curr: 1 } })
+                            }
+                        });
+                    } else {
+                        layer.msg(result.msg);
+                    }
+
+                },
+                error: function () {
+                    layer.msg('系统错误');
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+    })
+
+
+</script>

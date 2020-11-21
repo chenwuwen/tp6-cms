@@ -8,8 +8,8 @@
                     <div class="layui-form-item" style="display: none">
                         <label class="layui-form-label">ID</label>
                         <div class="layui-input-inline">
-                            <input type="text" value='{$orderInfo.id}' name="id" lay-verify="id"
-                                autocomplete="off" class="layui-input">
+                            <input type="text" value='{$orderInfo.id}' name="id" lay-verify="id" autocomplete="off"
+                                class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item" style="display: none">
@@ -19,14 +19,25 @@
                                 autocomplete="off" class="layui-input">
                         </div>
                     </div>
+
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">产品编号</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="product_number" value='{$orderInfo.product_number}'
-                                    lay-verify="required" autocomplete="off" class="layui-input">
-                            </div>
+                        
+                                <label class="layui-form-label">产品编号</label>
+             
                         </div>
+                        <div class="layui-inline">
+                            <select name="product_number" lay-verify="" lay-search>
+                                <option value="">请选择产品,可搜索</option>
+                                {foreach $productList as $key=>$vo }
+                                <option value='{$vo.product_number}' {$orderInfo.product_number===$vo.product_number ?='selected' }>{$vo.product_name}-{$vo.product_model}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="layui-form-item">
                         <div class="layui-inline">
                             <label class="layui-form-label">发货日期</label>
                             <div class="layui-input-inline">
@@ -56,7 +67,7 @@
                             <label class="layui-form-label">发货单号</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="send_number" value='{$orderInfo.send_number}'
-                                    lay-verify="required" autocomplete="off" class="layui-input">
+                                    lay-verify="number" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -93,14 +104,14 @@
                             <label class="layui-form-label">发票代码</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="invoice_code" value='{$orderInfo.invoice_code}'
-                                    lay-verify="required" autocomplete="off" class="layui-input">
+                                    lay-verify="number" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
                             <label class="layui-form-label">发票号码</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="invoice_number" value='{$orderInfo.invoice_number}'
-                                    autocomplete="off" class="layui-input">
+                                lay-verify="number"   autocomplete="off" class="layui-input">
                             </div>
                         </div>
 
@@ -125,7 +136,7 @@
                             <label class="layui-form-label">快递单号</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="express_number" value='{$orderInfo.express_number}'
-                                    autocomplete="off" class="layui-input">
+                                lay-verify="number" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                     </div>
@@ -147,14 +158,16 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">安装验收</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="acceptance" value='{$orderInfo.acceptance}' autocomplete="off" class="layui-input">
+                                <input type="text" name="acceptance" value='{$orderInfo.acceptance}' autocomplete="off"
+                                    class="layui-input">
                             </div>
                         </div>
 
                         <div class="layui-inline">
                             <label class="layui-form-label">余款追讨</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="recovery_of_balance" value='{$orderInfo.recovery_of_balance}' autocomplete="off" class="layui-input">
+                                <input type="text" name="recovery_of_balance" value='{$orderInfo.recovery_of_balance}'
+                                    autocomplete="off" class="layui-input">
                             </div>
                         </div>
 

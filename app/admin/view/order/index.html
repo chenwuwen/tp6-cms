@@ -211,6 +211,16 @@
                 }
             }
 
+            //监听行双击事件
+            table.on('rowDouble(order_table)', function (obj) {
+                //得到当前行元素对象
+                console.log(obj.tr) 
+                //得到当前行数据
+                data = obj.data
+                console.log(data) 
+                topLayui.index.openTabsPage('/admin/order/viewOrderDetail/'+data.id, "查看订单明细");
+            });
+
         })
     </script>
 

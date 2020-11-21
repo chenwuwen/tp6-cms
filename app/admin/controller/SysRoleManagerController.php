@@ -51,7 +51,6 @@ class SysRoleManagerController extends BaseController
             // 将数组转成字符串
             $hasPermissionIds = implode(",", $hasPermissionIds);
         }
-
         return  View::fetch('/role/role', ['roleInfo' => $roleInfo, 'hasPermissionIds' => $hasPermissionIds]);
     }
 

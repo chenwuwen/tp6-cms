@@ -27,7 +27,9 @@
         </div>
     </div>
 
-
+    <script type="text/html" id="customer_toolbar">
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>收货地址管理</a>
+      </script>
 
     <script>
 
@@ -39,6 +41,8 @@
             // 选中状态(checkStatus.data //获取选中行的数据,checkStatus.data.length//获取选中行数量，可作为是否有选中行的条件 checkStatus.isAll //表格是否全选)
             var checkStatus = table.checkStatus('sys_user_table');
 
+            // 得到父级的layui
+            var topLayui = parent === self ? layui : top.layui;
             //监听搜索
             form.on('submit(customer-search)', function (data) {
                 var field = data.field;
@@ -61,13 +65,6 @@
                     { field: 'customer_address', title: '客户地址', align: "center", },
                     { field: 'phone', title: '电话', align: "center", },
                     { field: 'contacts', title: '联系人', align: "center", },
-                    { field: 'recipient_company', title: '收货单位名称', align: "center", },
-                    { field: 'recipient_address', title: '收货地址', align: "center", },
-                    { field: 'recipient_phone', title: '收货电话', align: "center", },
-                    { field: 'recipient', title: '收货人', align: "center", },
-                    { field: 'ticket_address', title: '收票地址', align: "center", },
-                    { field: 'ticket_phone', title: '收票电话', align: "center", },
-                    { field: 'ticket', title: '收票人', align: "center", },
                     {
                         field: 'data', title: '附件', align: "center", templet: function (d) {
                             if (d.ticket_data == '') {
@@ -78,7 +75,7 @@
                         }
                     },
                     { field: 'update_time', title: '更新时间', align: "center", },
-                    { field: 'contacts', title: '联系人', align: "center", },
+                    { fixed: 'right', width: 150, align: 'center', toolbar: '#customer_toolbar' }
                 ]],
                 page: true,
                 height: "full-150", //其中150 为距离底部的距离
@@ -95,7 +92,7 @@
                     case 'add':   //添加操作
                         layer.open({
                             type: 2,
-                            area: ['100rem', '50%'],
+                            area: ['50rem', '50%'],
                             title: '添加客户信息',
                             closeBtn: 1,
                             anim: 1,
@@ -229,8 +226,13 @@
                 }
             }
 
-
-
+            // 每行数据后面的操作按钮
+            table.on('tool(customer_table)', function (obj) {
+                var layEvent = obj.event;
+                var data = obj.data;
+                console.log(layEvent)
+                topLayui.index.openTabsPage('/admin/customer/receive?customer_id='+data.id, "收货地址管理");
+            })
 
 
         })
@@ -257,6 +259,8 @@
             document.body.removeChild(ele);
 
         }
+
+
     </script>
 
 

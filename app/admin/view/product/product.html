@@ -34,7 +34,17 @@
 
 <div class="layui-form-item">
   <div class="layui-inline">
-    <label class="layui-form-label">规格型号</label>
+    <label class="layui-form-label">规格</label>
+    <div class="layui-input-inline">
+      <input type="text" name="product_specs" value='{$productInfo.product_specs}' autocomplete="off"
+        class="layui-input" lay-key="2">
+    </div>
+  </div>
+</div>
+
+<div class="layui-form-item">
+  <div class="layui-inline">
+    <label class="layui-form-label">型号</label>
     <div class="layui-input-inline">
       <input type="text" name="product_model" value='{$productInfo.product_model}' autocomplete="off"
         class="layui-input" lay-key="2">

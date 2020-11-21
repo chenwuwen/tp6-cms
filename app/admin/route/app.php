@@ -55,6 +55,14 @@ Route::post('customer/addOrEditCustomer', 'CustomerManagerController/addOrEditCu
 
 Route::get('customer/delete/:ids', 'CustomerManagerController/deleteCustomer', 'GET');
 
+Route::get('customer/receive$', 'ReceiveManagerController/index', 'GET');
+
+Route::get('customer/receive/list/:customerId', 'ReceiveManagerController/list', 'GET');
+
+Route::post('customer/receive/addOrEditCustomerReceive', 'ReceiveManagerController/addOrEditCustomerReceive', 'POST');
+
+Route::post('customer/receive/delete/:ids', 'ReceiveManagerController/deleteCustomerReceive', 'GET');
+
 
 // product
 Route::get('product$', 'ProductManagerController/index', 'GET');
@@ -78,6 +86,8 @@ Route::get('order/addOrEditOrderIndex/[:orderId]', 'OrderManagerController/addOr
 Route::post('order/addOrEditOrder', 'OrderManagerController/addOrEditOrder', 'POST');
 
 Route::get('order/delete/:ids', 'OrderManagerController/deleteOrder', 'GET');
+
+Route::get('order/viewOrderDetail/:id', 'OrderManagerController/viewOrderDetail', 'GET');
 
 // role
 Route::get('role$', 'SysRoleManagerController/index', 'GET');

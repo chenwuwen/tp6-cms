@@ -34,38 +34,6 @@
 
         <div class="layui-form-item">
             <div class="layui-inline">
-                <label class="layui-form-label">收货单位</label>
-                <div class="layui-input-inline">
-                    <input type="text" value='{$customer.recipient_company}' name="recipient_company"
-                        lay-verify="required" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">收货地址</label>
-                <div class="layui-input-inline">
-                    <input type="text" value='{$customer.recipient_address}' name="recipient_address"
-                        class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">收货电话</label>
-                <div class="layui-input-inline">
-                    <input type="text" value='{$customer.recipient_phone}' name="recipient_phone" lay-verify="phone"
-                        autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">收货人</label>
-                <div class="layui-input-inline">
-                    <input type="text" value='{$customer.recipient}' name="recipient" autocomplete="off"
-                        class="layui-input">
-                </div>
-            </div>
-        </div>
-
-
-        <div class="layui-form-item">
-            <div class="layui-inline">
                 <label class="layui-form-label">开票资料</label>
                 <div class="layui-input-inline">
                     <button type="button" class="layui-btn" id="test1">
@@ -78,30 +46,8 @@
             </div>
         </div>
 
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">收票地址</label>
-                <div class="layui-input-inline">
-                    <input type="text" value='{$customer.ticket_address}' name="ticket_address" class="layui-input">
-                </div>
-            </div>
-        </div>
+  
 
-        <div class="layui-form-item">
-
-            <div class="layui-inline">
-                <label class="layui-form-label">收票电话</label>
-                <div class="layui-input-inline">
-                    <input type="tel" value='{$customer.ticket_phone}' name="ticket_phone" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">收票人</label>
-                <div class="layui-input-inline">
-                    <input type="text" value='{$customer.ticket}' name="ticket" class="layui-input">
-                </div>
-            </div>
-        </div>
 
 
         <div class="layui-form-item">
@@ -169,7 +115,7 @@
             accept: 'file',
             multiple: false, //是否允许多文件上传
             before: function (obj) { //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
-                Loading_Index =  layer.load(); //上传loading
+                Loading_Index =  layer.load(2); //上传loading
             },
             choose: function (obj) {
                 // 将每次选择的文件追加到文件队列
