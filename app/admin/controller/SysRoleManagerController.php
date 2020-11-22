@@ -53,7 +53,9 @@ class SysRoleManagerController extends BaseController
         }
         return  View::fetch('/role/role', ['roleInfo' => $roleInfo, 'hasPermissionIds' => $hasPermissionIds]);
     }
-
+    /**
+     * 添加或编辑角色信息
+     */
     public function addOrEditRole()
     {
         $role = request()->param();

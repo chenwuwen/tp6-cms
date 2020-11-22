@@ -2,8 +2,10 @@
 
 namespace app\admin\controller;
 
+use app\admin\service\OrderService;
 use app\BaseController;
 use app\lib\ResponseResult;
+use app\model\CustomerInfoModel;
 use app\model\OrderInfoModel;
 use app\model\ProductInfoModel;
 use think\facade\Log;
@@ -43,33 +45,31 @@ class OrderManagerController extends BaseController
         $orderInfo = null;
         // $productList = ProductInfoModel::column('product_number', 'product_name', 'product_model');
         $productList = ProductInfoModel::select()->toArray();
+        $customerList = CustomerInfoModel::select()->toArray();
         if (!empty($orderId)) {
             $orderInfo =  OrderInfoModel::find($orderId);
         }
         // dump( $orderInfo);
         // View::assign方法赋值属于全局变量赋值，如果需要单次赋值的话，可以直接在fetch方法中传入,或使用view()助手函数
-        return view('order/order', ['orderInfo' => $orderInfo, 'productList' => $productList]);
+        return view('order/order', ['orderInfo' => $orderInfo, 'productList' => $productList, 'customerList' => $customerList]);
     }
 
     public function addOrEditOrder()
     {
         $order = request()->param();
         $product_number = $order['product_number'];
-        $order_number = $order['order_number'];
         // 先查看产品编号是否存在
         $product = ProductInfoModel::where('product_number', $product_number)->find();
         if (empty($product)) {
             return ResponseResult::Error(Config::get('ResponseResultStatus.validate_error_code'), '产品信息不存在!');
         }
-        if (empty($order_number)) {
-            // 自动生成订单编号
-            $order['order_number'] = get_sn();
-        }
-        $orderInfoModel = new OrderInfoModel();
+        $orderService = new OrderService;
         // dump($order);
-        $result = $orderInfoModel->save($order);
-        if ($result) {
+        try {
+            $orderService->saveOrEditOrder($order);
             return ResponseResult::Success();
+        } catch (\Exception $e) {
+            return ResponseResult::Error(null, $e->getMessage());
         }
         return ResponseResult::Error();
     }
@@ -89,7 +89,8 @@ class OrderManagerController extends BaseController
     public function viewOrderDetail()
     {
         $id = request()->param("id");
-
-        return view('order/order_detail');
+        $orderService = new OrderService;
+        $orderDetail = $orderService->getOrderDetail($id);
+        return view('order/order_detail', $orderDetail);
     }
 }

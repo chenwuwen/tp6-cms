@@ -1,0 +1,206 @@
+<body>
+    <div class="layui-fluid">
+        <div class="layui-tab layui-tab-card">
+            <ul class="layui-tab-title">
+                <li class="layui-this">订单信息</li>
+                <li>商品信息</li>
+                <li>客户信息</li>
+            </ul>
+            <div class="layui-tab-content">
+
+                <!-- 订单信息 -->
+                <div class="layui-tab-item layui-show">
+                    <table class="layui-table">
+                        <tbody>
+                            <tr>
+                                <td>订单编号</td>
+                                <td>{$orderInfo.order_number}</td>
+                            </tr>
+                            <tr>
+                                <td>发货日期</td>
+                                <td>{$orderInfo.send_date}</td>
+                            </tr>
+                            <tr>
+                                <td>检验报告</td>
+                                <td>{$orderInfo.inspection_report}</td>
+                            </tr>
+                            <tr>
+                                <td>承运物流</td>
+                                <td>{$orderInfo.logistics}</td>
+                            </tr>
+                            <tr>
+                                <td>发货单号</td>
+                                <td>{$orderInfo.send_number}</td>
+                            </tr>
+                            <tr>
+                                <td>收货确认</td>
+                                <td>{$orderInfo.rceceipt_confirm}</td>
+                            </tr>
+                            <tr>
+                                <td>收货日期</td>
+                                <td>{$orderInfo.rceceipt_date}</td>
+                            </tr>
+                            <tr>
+                                <td>开票日期</td>
+                                <td>{$orderInfo.invoice_date}</td>
+                            </tr>
+                            <tr>
+                                <td>发票代码</td>
+                                <td>{$orderInfo.invoice_code}</td>
+                            </tr>
+                            <tr>
+                                <td>发票是否随货</td>
+                                <td>{$orderInfo.invoice_follow}</td>
+                            </tr>
+                            <tr>
+                                <td>快递公司</td>
+                                <td>{$orderInfo.express}</td>
+                            </tr>
+                            <tr>
+                                <td>快递单号</td>
+                                <td>{$orderInfo.express_number}</td>
+                            </tr>
+                            <tr>
+                                <td>收票确认</td>
+                                <td>{$orderInfo.ticket_confirm}</td>
+                            </tr>
+                            <tr>
+                                <td>安装验收</td>
+                                <td>{$orderInfo.acceptance}</td>
+                            </tr>
+                            <tr>
+                                <td>余款追讨</td>
+                                <td>{$orderInfo.recovery_of_balance}</td>
+                            </tr>
+                            <tr>
+                                <td>创建时间</td>
+                                <td>{$orderInfo.create_time}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <!-- 产品信息 -->
+                <div class="layui-tab-item">
+
+                </div>
+
+                <!-- 客户信息 -->
+                <div class="layui-tab-item">
+
+                    <table class="layui-table" id="customer_table">
+                        <tbody>
+                            <tr>
+                                <td>客户姓名</td>
+                                <td>{$customerInfo.customer_name}</td>
+                            </tr>
+                            <tr>
+                                <td>客户地址</td>
+                                <td>{$customerInfo.customer_address}</td>
+                            </tr>
+                            <tr>
+                                <td>电话</td>
+                                <td>{$customerInfo.phone}</td>
+                            </tr>
+                            <tr>
+                                <td>联系人</td>
+                                <td>{$customerInfo.contacts}</td>
+                            </tr>
+                            <tr>
+                                <td>附件</td>
+                                <td>下载</td>
+                            </tr>
+
+                            <tr>
+                                <td>收货单位名称</td>
+                                <td>{{d.recipient_company||""}}</td>
+                            </tr>
+                            <tr>
+                                <td>收货人</td>
+                                <td>{{d.recipient||""}}</td>
+                            </tr>
+                            <tr>
+                                <td>收货电话</td>
+                                <td>{{d.recipient_phone||""}}</td>
+                            </tr>
+                            <tr>
+                                <td>收货地址</td>
+                                <td>{{d.recipient_address||""}}</td>
+                            </tr>
+                            <tr>
+                                <td>收票人</td>
+                                <td>{{d.ticket||""}}</td>
+                            </tr>
+                            <tr>
+                                <td>收票电话</td>
+                                <td>{{d.ticket_phone||""}}</td>
+                            </tr>
+                            <tr>
+                                <td>收票地址</td>
+                                <td>{{{d.ticket_address||""}}</td> </tr>
+                   
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+<!-- 产品信息模板 -->
+<script id="product_tpl" type="text/html">
+    {{#  layui.each(d.list, function(index, item){ }}
+    <tbody>
+        <tr> <td>产品编号</td>   <td>{item.product_number}</td> </tr>
+        <tr> <td>产品名称</td>   <td>{item.product_name}</td> </tr>
+        <tr> <td>规格</td>   <td>{item.product_specs}</td> </tr>
+        <tr> <td>型号</td>   <td>{item.product_model}</td> </tr>
+        <tr> <td>特殊要求</td>   <td>{item.special_request}</td> </tr>
+        <tr> <td>更新时间</td>   <td>{item.update_time}</td> </tr>
+    </tbody>
+    {{#  } }} 
+  </script>
+
+  <!-- 产品信息数据 -->
+  <script id="product_data" type="text/html">
+    {foreach $orderDetailList as $key=>$orderDetail }
+    <input value='{$orderDetail.product_info}'>
+    {/foreach}
+</script>
+
+<!-- 收货信息数据 -->
+ <script id="recevie_data" type="text/html">
+   <i>{$orderDetailList.0.receive_info}</i>
+</script> 
+
+<script>
+
+    //注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+    layui.use(['element', 'laytpl', 'jquery'], function () {
+        var element = layui.element;
+        var laytpl = layui.laytpl;
+
+        var receive_html=document.getElementById('recevie_data').innerHTML;
+        // 打印出的html不带script标签
+        // console.log(receive_html)
+
+        var productList = new Array();
+        var receiveInfo = $(receive_html).text();
+
+        console.log(receiveInfo)
+
+        var getTpl = $("#customer_table").html()
+            , view = document.getElementById('customer_table');
+        laytpl(getTpl).render(receiveInfo, function (html) {
+            view.innerHTML = html;
+        });
+
+
+
+
+
+    });
+</script>

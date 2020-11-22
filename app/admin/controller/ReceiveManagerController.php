@@ -25,6 +25,9 @@ class ReceiveManagerController extends BaseController
         return ResponseResult::Success($receiveList, 1);
     }
 
+    /**
+     * 添加或编辑用户信息
+     */
     public function addOrEditCustomerReceive()
     {
         $param = request()->param();
