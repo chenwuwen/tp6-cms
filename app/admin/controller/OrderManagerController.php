@@ -6,6 +6,7 @@ use app\admin\service\OrderService;
 use app\BaseController;
 use app\lib\ResponseResult;
 use app\model\CustomerInfoModel;
+use app\model\CustomerReceiveModel;
 use app\model\OrderInfoModel;
 use app\model\ProductInfoModel;
 use think\facade\Log;
@@ -43,15 +44,17 @@ class OrderManagerController extends BaseController
         $orderId = request()->param('orderId');
         // dump( $orderId);
         $orderInfo = null;
+        $receiveList = [];
         // $productList = ProductInfoModel::column('product_number', 'product_name', 'product_model');
         $productList = ProductInfoModel::select()->toArray();
         $customerList = CustomerInfoModel::select()->toArray();
         if (!empty($orderId)) {
             $orderInfo =  OrderInfoModel::find($orderId);
+            $receiveList = CustomerReceiveModel::where('customer_id',$orderInfo['customer_id'])->select()->toArray();
         }
         // dump( $orderInfo);
         // View::assign方法赋值属于全局变量赋值，如果需要单次赋值的话，可以直接在fetch方法中传入,或使用view()助手函数
-        return view('order/order', ['orderInfo' => $orderInfo, 'productList' => $productList, 'customerList' => $customerList]);
+        return view('order/order', ['orderInfo' => $orderInfo, 'productList' => $productList, 'customerList' => $customerList, 'receiveList' => $receiveList]);
     }
 
     public function addOrEditOrder()

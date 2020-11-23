@@ -60,7 +60,14 @@ class ProductManagerController extends BaseController
     {
         $productInfo = request()->param();
         $productModel = new ProductInfoModel;
-        $result = $productModel->save($productInfo);
+        $result = false;
+        if (empty($productInfo['id'])) {
+            $result = $productModel->save($productInfo);
+        } else {
+            $product = $productModel->find($productInfo['id']);
+            $result = $product->save($productInfo);
+        }
+
         if ($result) {
             return ResponseResult::Success();
         } else {

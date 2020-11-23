@@ -60,15 +60,19 @@ class SysRoleManagerController extends BaseController
     {
         $role = request()->param();
         $sysRolePermissionModel =  new SysRolePermissionModel;
-        if (!empty($role['id'])) {
-            // 如果包含roleId,说明是修改,则先删除角色权限关联表数据
-            SysRolePermissionModel::where('sys_role_id', $role['id'])->delete();
-        };
         $permissionIds = $role['permissionList'];
         $permissionList = explode(',', $permissionIds);
         // dump($permissionList );
         $sysRoleModel = new SysRoleModel;
-        $sysRoleModel->save($role);
+
+        if (!empty($role['id'])) {
+            // 如果包含roleId,说明是修改,则先删除角色权限关联表数据
+            SysRolePermissionModel::where('sys_role_id', $role['id'])->delete();
+            $roleInfo =  $sysRoleModel->find($role['id']);
+            $roleInfo->save($role);
+        } else {
+            $sysRoleModel->save($role);
+        }
         $permissionRoleList = array();
         foreach ($permissionList as $value) {
             $permissionRole = ['sys_role_id' => $sysRoleModel['id'], 'sys_permission_id' => $value];

@@ -22,7 +22,8 @@
             <div class="layui-inline">
                 <label class="layui-form-label">角色Id</label>
                 <div class="layui-input-inline">
-                    <input type="text" value='{$roleInfo.id}' name="id" autocomplete="off" class="layui-input">
+                    <input type="text" value='{$roleInfo.id}' name="id" id="role_id" autocomplete="off"
+                        class="layui-input">
                 </div>
             </div>
         </div>
@@ -80,15 +81,15 @@
         })
 
         form.on('submit(component-form-role)', function (data) {
-            
+
             var permissionIds = getCheckedId(tree.getChecked('permissionId'))
             console.log(permissionIds)
             $.ajax({
                 url: '{:url("/admin/role/addOrEditRole")}',
                 type: 'post',
-                data: { 'role_name': $("#role_name").val(), 'describe': $("#describe").val(), 'permissionList': permissionIds },
+                data: { 'id': $("#role_id").val(), 'role_name': $("#role_name").val(), 'describe': $("#describe").val(), 'permissionList': permissionIds },
                 success: function (result) {
-                    
+
                     if (result.code == 0) {
                         layer.msg('成功!', {
                             icon: 6,

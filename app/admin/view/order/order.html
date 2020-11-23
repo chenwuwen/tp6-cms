@@ -23,39 +23,38 @@
                     <div class="layui-form-item">
 
                         <div class="layui-inline" style="margin-right:0px">
-                            <label class="layui-form-label" style="">产品编号</label>
-                        </div>
-                        <div class="layui-inline">
-                            <select name="product_number" lay-verify="" lay-search>
-                                <option value="">请选择产品,可搜索</option>
-                                {foreach $productList as $key=>$vo }
-                                <option value='{$vo.product_number}' {$orderInfo.product_number===$vo.product_number
-                                    ?='selected' }>{$vo.product_name}-{$vo.product_model}</option>
-                                {/foreach}
-                            </select>
+                            <label class="layui-form-label">产品编号</label>
+                            <div class="layui-input-inline">
+                                <select name="product_number" lay-verify="" lay-search>
+                                    <option value="">请选择产品,可搜索</option>
+                                    {foreach $productList as $key=>$vo }
+                                    <option value='{$vo.product_number}' {$orderInfo.product_number===$vo.product_number
+                                        ?='selected' }>{$vo.product_name}-{$vo.product_model}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
                         </div>
 
                     </div>
 
                     <div class="layui-form-item">
 
-                        <div class="layui-inline" style="margin-right:0px">
-                            <label class="layui-form-label" style="">客户信息</label>
-                        </div>
-                        <div class="layui-inline">
+                        <label class="layui-form-label" >客户信息</label>
+                        <div class="layui-input-inline">
                             <select name="customer_id" lay-verify="" lay-search lay-filter="customer">
                                 <option value="">请选择客户,可搜索</option>
                                 {foreach $customerList as $key=>$vo }
-                                <option value='{$vo.id}' {$orderInfo.customer_id===$vo.id ?='selected' }>
-                                    {$vo.customer_name}</option>
+                                <option value='{$vo.id}' {$orderInfo.customer_id===$vo.id ?='selected' }>{$vo.customer_name}</option>
                                 {/foreach}
                             </select>
-                        </div>
-
-                        <div class="layui-inline">
+                            </div>
+                            <div class="layui-input-inline">
                             <select name="receive_id" lay-verify="" lay-search id="receive">
                                 <option value="">请选则收货信息,可搜索</option>
-
+                                {foreach $receiveList as $key=>$vo }
+                                
+                                <option value='{$vo.id}' {$orderInfo.receive_id===$vo.id ?='selected' }>收货信息:{$vo.recipient} {$vo.recipient_phone}  {$vo.recipient_address}  {$vo.recipient_company} , 收票信息:{$vo.ticket} {$vo.ticket_address}  {$vo.ticket_phone} </option>
+                                {/foreach}
                             </select>
                         </div>
 
@@ -242,11 +241,14 @@
             var url = '/admin/customer/receive/list/' + data.value;
             $.get(url, function (res) {
                 $("#receive").empty();
-                $("#receive").append(new Option("请选择收货地址",""));
+                $("#receive").append(new Option("请选择收货地址", ""));
                 data = res.data
+                var separator = " ";
                 $.each(data, function (index, item) {
-                    info = item.recipient + item.recipient + item.recipient_address + item.recipient_company
-                    info += item.recipient_phone + item.ticket + item.ticket_address + item.ticket_phone
+
+                    info = "收货信息：" + item.recipient +separator+ item.recipient_phone +separator+ item.recipient_address +separator+ item.recipient_company
+                    info += ","
+                    info += "收票信息：" + item.ticket +separator+ item.ticket_address +separator+ item.ticket_phone
                     $("#receive").append(new Option(info, item.id));
                     console.log(index, item);
                 });
