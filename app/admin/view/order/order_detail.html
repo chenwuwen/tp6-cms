@@ -82,7 +82,7 @@
                 </div>
 
                 <!-- 产品信息 -->
-                <div class="layui-tab-item">
+                <div class="layui-tab-item" id="product_item">
 
                 </div>
 
@@ -109,7 +109,7 @@
                             </tr>
                             <tr>
                                 <td>附件</td>
-                                <td>下载</td>
+                                <td>前往客户管理下载</td>
                             </tr>
 
                             <tr>
@@ -138,8 +138,9 @@
                             </tr>
                             <tr>
                                 <td>收票地址</td>
-                                <td>{{{d.ticket_address||""}}</td> </tr>
-                   
+                                <td>{{d.ticket_address||""}}</td>
+                            </tr>
+
                         </tbody>
                     </table>
 
@@ -152,29 +153,31 @@
 
 <!-- 产品信息模板 -->
 <script id="product_tpl" type="text/html">
-    {{#  layui.each(d.list, function(index, item){ }}
-    <tbody>
-        <tr> <td>产品编号</td>   <td>{item.product_number}</td> </tr>
-        <tr> <td>产品名称</td>   <td>{item.product_name}</td> </tr>
-        <tr> <td>规格</td>   <td>{item.product_specs}</td> </tr>
-        <tr> <td>型号</td>   <td>{item.product_model}</td> </tr>
-        <tr> <td>特殊要求</td>   <td>{item.special_request}</td> </tr>
-        <tr> <td>更新时间</td>   <td>{item.update_time}</td> </tr>
-    </tbody>
-    {{#  } }} 
+    {{#  layui.each(d, function(index, item){ }}
+    <table class="layui-table">
+        <tbody >
+            <tr> <td>产品编号</td>   <td>{{item.product_number}}</td> </tr>
+            <tr> <td>产品名称</td>   <td>{{item.product_name}}</td> </tr>
+            <tr> <td>规格</td>   <td>{{item.product_specs}}</td> </tr>
+            <tr> <td>型号</td>   <td>{{item.product_model}}</td> </tr>
+            <tr> <td>特殊要求</td>   <td>{{item.special_request}}</td> </tr>
+            <tr> <td>更新时间</td>   <td>{item.update_time}}</td> </tr>
+        </tbody>
+    </table>
+    {{#  }) }} 
   </script>
 
-  <!-- 产品信息数据 -->
-  <script id="product_data" type="text/html">
+<!-- 产品信息数据 -->
+<script id="product_data" type="text/html">
     {foreach $orderDetailList as $key=>$orderDetail }
     <input value='{$orderDetail.product_info}'>
     {/foreach}
 </script>
 
 <!-- 收货信息数据 -->
- <script id="recevie_data" type="text/html">
+<script id="recevie_data" type="text/html">
    <i>{$orderDetailList.0.receive_info}</i>
-</script> 
+</script>
 
 <script>
 
@@ -183,20 +186,40 @@
         var element = layui.element;
         var laytpl = layui.laytpl;
 
-        var receive_html=document.getElementById('recevie_data').innerHTML;
+        // 客户信息映射
+        var receive_html = document.getElementById('recevie_data').innerHTML;
         // 打印出的html不带script标签
         // console.log(receive_html)
 
-        var productList = new Array();
-        var receiveInfo = $(receive_html).text();
+        var receiveInfoStr = $(receive_html).text();
+        // 将json字符串转成json对象
+        receiveInfo = $.parseJSON(receiveInfoStr)
+        // console.log(receiveInfo)
 
-        console.log(receiveInfo)
-
-        var getTpl = $("#customer_table").html()
-            , view = document.getElementById('customer_table');
-        laytpl(getTpl).render(receiveInfo, function (html) {
-            view.innerHTML = html;
+        var customerTpl = $("#customer_table").html()
+            , customerview = document.getElementById('customer_table');
+        laytpl(customerTpl).render(receiveInfo, function (html) {
+            customerview.innerHTML = html;
+            // console.log(html)
         });
+
+
+        // 产品信息映射
+        var productInfoList = new Array();
+        var product_html = document.getElementById('product_data').innerHTML;
+        $(product_html).each(function (index, item) {
+            // console.log(item)
+            productInfoStr = $(item).val()
+            productInfoList.push($.parseJSON(productInfoStr))
+        })
+        console.log(productInfoList)
+        var productTpl = $("#product_tpl").html()
+            , productView = document.getElementById('product_item');
+        laytpl(productTpl).render(productInfoList, function (html) {
+            productView.innerHTML = html;
+            console.log(html)
+        });
+
 
 
 

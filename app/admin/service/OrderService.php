@@ -47,7 +47,7 @@ class OrderService
         $product_number =  $orderInfo['product_number'];
         // 删除订单详细信息
         OrderDetailModel::where('order_number', $orderInfo['order_number'])->delete();
-        $productInfo = ProductInfoModel::where('product_number', $product_number);
+        $productInfo = ProductInfoModel::where('product_number', $product_number)->find();
         $receive_id = $orderInfo['receive_id'];
         $receiveInfo = CustomerReceiveModel::find($receive_id);
         $orderDetail = [
