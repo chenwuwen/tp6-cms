@@ -68,6 +68,9 @@ class CustomerManagerController extends BaseController
         }
     }
 
+    /**
+     * 删除客户
+     */
     public function deleteCustomer()
     {
         $idStr = request()->param("ids");

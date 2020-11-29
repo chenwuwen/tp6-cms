@@ -22,24 +22,17 @@
 
                     <div class="layui-form-item">
 
-                        <div class="layui-inline" style="margin-right:0px">
                             <label class="layui-form-label">产品编号</label>
-                            <div class="layui-input-inline">
-                                <select name="product_number" lay-verify="" lay-search>
-                                    <option value="">请选择产品,可搜索</option>
-                                    {foreach $productList as $key=>$vo }
-                                    <option value='{$vo.product_number}' {$orderInfo.product_number===$vo.product_number
-                                        ?='selected' }>{$vo.product_name}-{$vo.product_model}</option>
-                                    {/foreach}
-                                </select>
+                            <!-- layui-input-block是一个表单元素占一行 -->
+                            <!-- layui-input-inline是多个表单控件占一行 -->
+                            <div class="layui-input-block" id="product_select">
                             </div>
-                        </div>
 
                     </div>
 
                     <div class="layui-form-item">
 
-                        <label class="layui-form-label" >客户信息</label>
+                        <label class="layui-form-label">客户信息</label>
                         <div class="layui-input-inline">
                             <select name="customer_id" lay-verify="" lay-search lay-filter="customer">
                                 <option value="">请选择客户,可搜索</option>
@@ -47,13 +40,16 @@
                                 <option value='{$vo.id}' {$orderInfo.customer_id===$vo.id ?='selected' }>{$vo.customer_name}</option>
                                 {/foreach}
                             </select>
-                            </div>
-                            <div class="layui-input-inline">
+                        </div>
+                        <div class="layui-input-inline">
                             <select name="receive_id" lay-verify="" lay-search id="receive">
                                 <option value="">请选则收货信息,可搜索</option>
                                 {foreach $receiveList as $key=>$vo }
-                                
-                                <option value='{$vo.id}' {$orderInfo.receive_id===$vo.id ?='selected' }>收货信息:{$vo.recipient} {$vo.recipient_phone}  {$vo.recipient_address}  {$vo.recipient_company} , 收票信息:{$vo.ticket} {$vo.ticket_address}  {$vo.ticket_phone} </option>
+                                {assign name="receiveInfo" value='$vo.recipient . $vo.recipient_phone .
+                                $vo.recipient_address . $vo.recipient_company' /}
+                                {assign name="ticketInfo" value='$vo.ticket . $vo.ticket_address . $vo.ticket_phone' /}
+                                <option value='{$vo.id}' {$orderInfo.receive_id===$vo.id ?='selected' }>
+                                    收货信息:{$receiveInfo},收票信息:{$ticketInfo}</option>
                                 {/foreach}
                             </select>
                         </div>
@@ -209,10 +205,15 @@
         </div>
 </body>
 <script>
-    layui.use(['jquery', 'form', 'element', 'table', 'laydate'], function () {
+
+    layui.extend({
+        xmSelect: '{__STATIC_PATH}/js/lib/xm-select' // {/}的意思即代表采用自有路径，即不跟随 base 路径
+    })
+    layui.use(['jquery', 'form', 'element', 'table', 'laydate', 'xmSelect'], function () {
         var $ = layui.jquery
             , form = layui.form
-            , laydate = layui.laydate;
+            , laydate = layui.laydate
+            , xmSelect = layui.xmSelect
 
 
         // 同时绑定多个date
@@ -224,15 +225,40 @@
             });
         });
 
+        // 这里使用了赋值函数的变种,是因为后台传递的json,直接赋值给前台变量,其json中的双引号会被转义成&quot;
+        var product_list = '{$productList|raw}'
+        var init_product_nums = '{$orderInfo.product_number|raw}'
+        // 如果init_product_nums的值是空,则将其赋值为空数组,否则,将其转换为json
+        init_product_nums = init_product_nums == '' ? [] : $.parseJSON(init_product_nums)
+        // 多选Select绑定
+        var demo1 = xmSelect.render({
+            el: '#product_select',
+            name: 'product_number', //表单提交时的name	
+            data: $.parseJSON(product_list),
+            layVerify: 'product_number',
+            initValue: init_product_nums, //initValue进行初始化
+            filterable: true, //是否开启搜索		
+            searchTips: '可搜索', //搜索提示	
+            prop: {
+                name: 'product_name', //显示名称	
+                value: 'product_number', //选中值, 当前多选唯一
+
+            }
+        })
+
 
         //自定义验证规则
         form.verify({
-            user_code: function (value) {
-                if (value.length < 5) {
-                    return '账号至少得5个字符';
+            receive_id: function (value) {
+                if (value == '') {
+                    return '收货信息不能为空';
+                }
+            },
+            product_number: function (value) {
+                if (value == '') {
+                    return '产品信息不能为空';
                 }
             }
-            , pass: [/^[\S]{6,12}$/, '密码必须6到12位，且不能出现空格']
 
         });
 
@@ -246,9 +272,9 @@
                 var separator = " ";
                 $.each(data, function (index, item) {
 
-                    info = "收货信息：" + item.recipient +separator+ item.recipient_phone +separator+ item.recipient_address +separator+ item.recipient_company
+                    info = "收货信息：" + item.recipient + separator + item.recipient_phone + separator + item.recipient_address + separator + item.recipient_company
                     info += ","
-                    info += "收票信息：" + item.ticket +separator+ item.ticket_address +separator+ item.ticket_phone
+                    info += "收票信息：" + item.ticket + separator + item.ticket_address + separator + item.ticket_phone
                     $("#receive").append(new Option(info, item.id));
                     console.log(index, item);
                 });

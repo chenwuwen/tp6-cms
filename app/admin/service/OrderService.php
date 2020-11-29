@@ -31,6 +31,9 @@ class OrderService
     {
         $order_number = $orderInfo['order_number'];
         $orderInfoModel = new OrderInfoModel();
+        $product_number_arr =  explode(',', $orderInfo['product_number']);
+        // 最后一个参数表示输出为数字格式
+        $orderInfo['product_number'] = json_encode($product_number_arr, JSON_NUMERIC_CHECK);
         if (empty($order_number)) {
             // 自动生成订单编号
             $orderInfo['order_number'] = get_sn();
@@ -44,19 +47,24 @@ class OrderService
         // dump($orderInfo['order_number']);
         // 获得插入的数据的id
         $orderId =  $orderInfoModel->id;
-        $product_number =  $orderInfo['product_number'];
+
         // 删除订单详细信息
         OrderDetailModel::where('order_number', $orderInfo['order_number'])->delete();
-        $productInfo = ProductInfoModel::where('product_number', $product_number)->find();
-        $receive_id = $orderInfo['receive_id'];
-        $receiveInfo = CustomerReceiveModel::find($receive_id);
-        $orderDetail = [
-            'order_number' => $orderInfo['order_number'],
-            'product_number' => $product_number,
-            'product_info' => json_encode($productInfo, JSON_UNESCAPED_UNICODE),
-            'receive_info' => json_encode($receiveInfo, JSON_UNESCAPED_UNICODE),
-        ];
-        $orderDetailModel = new OrderDetailModel;
-        $orderDetailModel->save($orderDetail);
+
+        // 多个产品的订单详细备份
+        foreach ($product_number_arr as $product_number) {
+
+            $productInfo = ProductInfoModel::where('product_number', $product_number)->find();
+            $receive_id = $orderInfo['receive_id'];
+            $receiveInfo = CustomerReceiveModel::find($receive_id);
+            $orderDetail = [
+                'order_number' => $orderInfo['order_number'],
+                'product_number' => $product_number,
+                'product_info' => json_encode($productInfo, JSON_UNESCAPED_UNICODE),
+                'receive_info' => json_encode($receiveInfo, JSON_UNESCAPED_UNICODE),
+            ];
+            $orderDetailModel = new OrderDetailModel;
+            $orderDetailModel->save($orderDetail);
+        }
     }
 }

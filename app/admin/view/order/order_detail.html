@@ -1,16 +1,17 @@
 <body>
     <div class="layui-fluid">
-        <div class="layui-tab layui-tab-card">
+        <div class="layui-tab layui-tab-card" lay-filter="order_detail_tab">
             <ul class="layui-tab-title">
                 <li class="layui-this">订单信息</li>
                 <li>商品信息</li>
                 <li>客户信息</li>
+                <li>导出</li>
             </ul>
             <div class="layui-tab-content">
 
                 <!-- 订单信息 -->
                 <div class="layui-tab-item layui-show">
-                    <table class="layui-table">
+                    <table class="layui-table" id="order_table">
                         <tbody>
                             <tr>
                                 <td>订单编号</td>
@@ -109,7 +110,15 @@
                             </tr>
                             <tr>
                                 <td>附件</td>
-                                <td>前往客户管理下载</td>
+                                {assign name="url" value='$customerInfo.ticket_data' /}
+                                {empty name="url"}
+                                <td>该用户未上传附件</td>
+                                {else/}
+                                <td class="layui-table-cell">
+                                    <div><a style="cursor:pointer" onclick='window.download("{$url}")'
+                                            class="layui-table-link">下载</a></div>
+                                </td>
+                                {/empty}
                             </tr>
 
                             <tr>
@@ -150,11 +159,11 @@
 
     </div>
 </body>
-
+<script type="text/javascript" src="{__STATIC_PATH}/js/excel.js"></script>
 <!-- 产品信息模板 -->
 <script id="product_tpl" type="text/html">
     {{#  layui.each(d, function(index, item){ }}
-    <table class="layui-table">
+    <table class="layui-table" class="product_table">
         <tbody >
             <tr> <td>产品编号</td>   <td>{{item.product_number}}</td> </tr>
             <tr> <td>产品名称</td>   <td>{{item.product_name}}</td> </tr>
@@ -169,8 +178,8 @@
 
 <!-- 产品信息数据 -->
 <script id="product_data" type="text/html">
-    {foreach $orderDetailList as $key=>$orderDetail }
-    <input value='{$orderDetail.product_info}'>
+    {foreach $orderDetailList as $key=>$orderDetail}
+    <article>{$orderDetail.product_info|raw}</article>
     {/foreach}
 </script>
 
@@ -185,6 +194,8 @@
     layui.use(['element', 'laytpl', 'jquery'], function () {
         var element = layui.element;
         var laytpl = layui.laytpl;
+
+        var order_number = '{$orderInfo.order_number}'
 
         // 客户信息映射
         var receive_html = document.getElementById('recevie_data').innerHTML;
@@ -205,25 +216,88 @@
 
 
         // 产品信息映射
-        var productInfoList = new Array();
-        var product_html = document.getElementById('product_data').innerHTML;
-        $(product_html).each(function (index, item) {
-            // console.log(item)
-            productInfoStr = $(item).val()
-            productInfoList.push($.parseJSON(productInfoStr))
+        var productInfoList = [];
+        var product_data_html = document.getElementById('product_data').innerHTML;
+        // console.log(product_data_html)
+        $(product_data_html).each(function (index, item) {
+            if (item.nodeType == 3) {
+                // 此处发现在遍历Dom元素时,出现了空白节点(打印其Dom展示的是#text,经查阅其是文本节点),因此需要过滤掉
+                // https://www.w3school.com.cn/jsref/prop_node_nodetype.asp
+                // https://my.oschina.net/Cubicluo/blog/680676
+                // https://www.cnblogs.com/LO-ME/p/4587496.html
+                // https://zhidao.baidu.com/question/444809254.html
+                console.log(item)
+                console.log(item.nodeType)
+
+                //跳过当前循环，继续执行下一次循环
+                return true;
+            }
+            let productInfoStr = $(item).text()
+            itemJson = JSON.parse(productInfoStr)
+            // console.log(itemJson)
+            productInfoList.push(itemJson)
         })
-        console.log(productInfoList)
+        productInfoListJson = JSON.stringify(productInfoList)
+        console.log(productInfoListJson)
         var productTpl = $("#product_tpl").html()
             , productView = document.getElementById('product_item');
-        laytpl(productTpl).render(productInfoList, function (html) {
+        laytpl(productTpl).render(JSON.parse(productInfoListJson), function (html) {
             productView.innerHTML = html;
-            console.log(html)
+            // console.log(html)
         });
 
 
+        //监听Tab切换，以改变地址hash值
+        element.on('tab(order_detail_tab)', function (data) {
+            // location.hash = 'test1=' + this.getAttribute('lay-id');
+            index = data.index; //得到当前Tab的所在下标
+            // console.log(index);
+            if (index == 3) {
+                var tableMap = new Map();
+                tableMap.set('订单信息', 'order_table');
+                // tableMap.set('商品信息', 'product_table');
+                // tableMap.set('客户信息', 'customer_table');
+                window.tableToExcel(tableMap, dateToString(new Date) + "_" + order_number)
+            }
 
-
-
+        });
 
     });
+
+    function dateToString(date) {
+        var year = date.getFullYear();
+        var month = (date.getMonth() + 1).toString();
+        var day = (date.getDate()).toString();
+        if (month.length == 1) {
+            month = "0" + month;
+        }
+        if (day.length == 1) {
+            day = "0" + day;
+        }
+        var dateTime = year + "-" + month + "-" + day;
+        return dateTime;
+    }
+
+    /**
+     * 下载方法(不跳转下载) ,layui调用自定方法.需要使用 window.自定义方法名
+     */
+    function download(url) {
+        // 添加一个a标签
+        let ele = document.createElement('a')
+        // 设置下载后的文件名
+        ele.download = url.substr(url.lastIndexOf('/') + 1)
+        // 隐藏a标签
+        ele.style.display = 'none'
+        // 给a标签加入地址
+        ele.href = url
+        // 规定在当前页面打开
+        ele.target = "_blank"
+        // 把元素加入到页面中
+        document.body.appendChild(ele);
+        // 触发它的点击事件
+        ele.click();
+        // 移除元素
+        document.body.removeChild(ele);
+    }
+
 </script>
