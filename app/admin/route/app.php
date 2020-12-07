@@ -110,3 +110,8 @@ Route::get('permission/addOrEditPermission/[:roleId]', 'SysPermissionManagerCont
 Route::post('permission/addOrEditPermission', 'SysPermissionManagerController/addOrEditPermission', 'POST');
 
 Route::get('permission/getTree', 'SysPermissionManagerController/getTree', 'GET');
+
+// site setting
+Route::get('site$', 'SiteSettingController/index', 'GET');
+
+Route::post('site/save', 'SiteSettingController/save', 'POST');

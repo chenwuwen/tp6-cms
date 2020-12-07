@@ -7,6 +7,8 @@ use app\lib\ResponseResult;
 use app\model\ProductInfoModel;
 use think\facade\Log;
 use think\facade\View;
+use think\annotation\Route;
+
 
 class ProductManagerController extends BaseController
 {
@@ -75,6 +77,9 @@ class ProductManagerController extends BaseController
         }
     }
 
+    /**
+     * 删除产品
+     */
     public function deleteProduct()
     {
         $idStr = request()->param("ids");
@@ -82,5 +87,15 @@ class ProductManagerController extends BaseController
         // 这里的删除是使用了Tp的软删除功能,在模型中配置的
         ProductInfoModel::destroy($ids);
         return ResponseResult::Success();
+    }
+
+    /**
+     * 导出数据到Excel,使用注解路由
+     * @Route("product/export")
+     */
+    public function export()
+    {
+        $productInfoModel =  new ProductInfoModel;
+        return ResponseResult::Success($productInfoModel->select(),$productInfoModel->count());
     }
 }

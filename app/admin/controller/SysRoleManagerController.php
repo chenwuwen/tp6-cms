@@ -24,7 +24,9 @@ class SysRoleManagerController extends BaseController
         return View::fetch('/role/index');
     }
 
-
+    /**
+     * 角色列表
+     */
     public function list()
     {
         $sysRoleModel = new SysRoleModel;
@@ -40,6 +42,9 @@ class SysRoleManagerController extends BaseController
         return ResponseResult::Success($list, $count);
     }
 
+    /**
+     * 返回添加或编辑角色页面
+     */
     public function addOrEditRoleIndex()
     {
         $roleId = request()->param('roleId');
@@ -53,6 +58,7 @@ class SysRoleManagerController extends BaseController
         }
         return  View::fetch('/role/role', ['roleInfo' => $roleInfo, 'hasPermissionIds' => $hasPermissionIds]);
     }
+
     /**
      * 添加或编辑角色信息
      */
@@ -64,18 +70,20 @@ class SysRoleManagerController extends BaseController
         $permissionList = explode(',', $permissionIds);
         // dump($permissionList );
         $sysRoleModel = new SysRoleModel;
-
+        $role_id = '';
         if (!empty($role['id'])) {
             // 如果包含roleId,说明是修改,则先删除角色权限关联表数据
             SysRolePermissionModel::where('sys_role_id', $role['id'])->delete();
             $roleInfo =  $sysRoleModel->find($role['id']);
             $roleInfo->save($role);
+            $role_id = $role['id'];
         } else {
             $sysRoleModel->save($role);
+            $role_id = $sysRoleModel->id;
         }
         $permissionRoleList = array();
         foreach ($permissionList as $value) {
-            $permissionRole = ['sys_role_id' => $sysRoleModel['id'], 'sys_permission_id' => $value];
+            $permissionRole = ['sys_role_id' =>  $role_id, 'sys_permission_id' => $value];
             array_push($permissionRoleList, $permissionRole);
         }
 

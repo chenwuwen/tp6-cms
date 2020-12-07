@@ -11,7 +11,7 @@
             </a>
           </li>
           <li class="layui-nav-item layui-hide-xs" lay-unselect>
-            <a href="http://www.layui.com/admin/" target="_blank" title="前台">
+            <a href='{$siteSettingInfo.domain}' target="_blank" title="前台">
               <i class="layui-icon layui-icon-website"></i>
             </a>
           </li>
@@ -75,7 +75,7 @@
       <div class="layui-side layui-side-menu">
         <div class="layui-side-scroll">
           <div class="layui-logo" lay-href="home/console.html">
-            <span>后台管理</span>
+            <span>{$siteSettingInfo.sitename}</span>
           </div>
 
 
@@ -108,21 +108,41 @@
 
 
             {volist name="permissionList" id="permission"}
-            {if condition="($permission.type == 1)"}
+            {if condition="($permission.type == 1 && $permission.parentid == 0)"}
+            <!-- 必须保证当前为目录,且为根目录 -->
             <li class="layui-nav-item">
               <a href="javascript:;" lay-tips="{$permission.name}" lay-direction="2">
                 <i class="{$permission.icon}"></i>
                 <cite>{$permission.name}</cite>
-                <span class="layui-nav-more"></span></a>
+                <span class="layui-nav-more"></span>
+              </a>
+
+              {volist name="permissionList" id="subPermission"}
+              {if condition="($subPermission.parentid == $permission.id)"}
+
               <dl class="layui-nav-child">
-                {volist name="permissionList" id="subPermission"}
-                {if condition="($subPermission.parentid == $permission.id)"}
+                {if condition="($subPermission.type == 2)"}
+                <!-- 如果是菜单直接展示 -->
                 <dd data-name="console">
                   <a lay-href='{$subPermission.url}'>{$subPermission.name}</a>
                 </dd>
+                {else /}
+                <!-- 否则是目录要创建子集 -->
+                <dd class="layui-nav-itemed">
+                  <a href="javascript:;">{$subPermission.name}<span class="layui-nav-more"></span></a>
+                  <dl class="layui-nav-child">
+                    {volist name="permissionList" id="grandPermission"}
+                    {if condition="($grandPermission.parentid == $subPermission.id)"}
+                    <dd><a lay-href="{$grandPermission.url}">{$grandPermission.name}</a></dd>
+                    {/if}
+                    {/volist}
+                  </dl>
+                </dd>
                 {/if}
-                {/volist}
               </dl>
+              {/if}
+              {/volist}
+
             </li>
             {/if}
             {/volist}
@@ -130,7 +150,7 @@
 
 
 
-            <li data-name="set" class="layui-nav-item">
+            <!-- <li data-name="set" class="layui-nav-item">
               <a href="javascript:;" lay-tips="设置" lay-direction="2">
                 <i class="layui-icon layui-icon-set"></i>
                 <cite>设置</cite>
@@ -139,7 +159,7 @@
                 <dd class="layui-nav-itemed">
                   <a href="javascript:;">系统设置<span class="layui-nav-more"></span></a>
                   <dl class="layui-nav-child">
-                    <dd><a lay-href="set/system/website.html">网站设置</a></dd>
+                    <dd><a lay-href="/admin/site">网站设置</a></dd>
                     <dd><a lay-href="set/system/email.html">邮件服务</a></dd>
                   </dl>
                 </dd>
@@ -151,7 +171,7 @@
                   </dl>
                 </dd>
               </dl>
-            </li>
+            </li> -->
 
             <span class="layui-nav-bar" style="top: 252px; height: 0px; opacity: 0;"></span>
           </ul>
@@ -200,7 +220,7 @@
     layui.config({
       base: '{__STATIC_PATH}/' //静态资源所在路径
     }).extend({
-      index: '/js/index' //主入口模块
+      index: 'js/index' //主入口模块
     }).use('index');
   </script>
 

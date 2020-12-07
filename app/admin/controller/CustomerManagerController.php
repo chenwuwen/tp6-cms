@@ -7,6 +7,7 @@ use app\lib\ResponseResult;
 use app\model\CustomerInfoModel;
 use think\facade\View;
 use think\facade\Config;
+use think\annotation\Route;
 
 class CustomerManagerController extends BaseController
 {
@@ -78,5 +79,15 @@ class CustomerManagerController extends BaseController
         // 这里的删除是使用了Tp的软删除功能,在模型中配置的
         CustomerInfoModel::destroy($ids);
         return ResponseResult::Success();
+    }
+
+    /**
+     * 导出数据到Excel,使用注解路由
+     * @Route("customer/export")
+     */
+    public function export()
+    {
+        $customerInfoModel =  new CustomerInfoModel;
+        return ResponseResult::Success($customerInfoModel->select(), $customerInfoModel->count());
     }
 }

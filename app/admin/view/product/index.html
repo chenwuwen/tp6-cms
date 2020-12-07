@@ -78,7 +78,9 @@
       //监听事件toolbar(table元素的id属性值lay-filter="对应的值")
       table.on('toolbar(product_table)', function (obj) {
         var checkStatus = table.checkStatus(obj.config.id);
+        console.log(`当前事件：${obj.event}`);
         switch (obj.event) {
+
           case 'add':   //添加操作
             layer.open({
               type: 2,
@@ -150,6 +152,32 @@
             } else {
               layer.msg('请选择一行作为编辑对象!');
             }
+            break;
+          case 'LAYTABLE_EXPORT': //导出事件
+            $.post('{:url("/admin/product/export")}', {},
+              function (res) {
+                // 1. 数组头部新增表头
+                res.data.unshift({
+                   'product_number':'产品编号',
+                   'product_name':'产品名称',
+                   'product_specs':'规格',
+                   'product_model':'型号',
+                   'special_request':'特殊要求',
+                   'update_time':'更新时间',
+                });
+                // 2. 如果需要调整顺序，请执行梳理函数
+                var data = LAY_EXCEL.filterExportData(res.data, [
+                  'product_number',
+                  'product_name',
+                  'product_specs',
+                  'product_model',
+                  'special_request',
+                  'update_time',
+                ]);
+                // 3. 执行导出函数，系统会弹出弹框
+                LAY_EXCEL.exportExcel(data, '产品列表.xlsx', 'xlsx')
+              }, "json");
+
             break;
         };
       });

@@ -12,6 +12,8 @@ use app\model\ProductInfoModel;
 use think\facade\Log;
 use think\facade\View;
 use think\facade\Config;
+use think\annotation\Route;
+use \think\facade\Db;
 
 class OrderManagerController extends BaseController
 {
@@ -107,5 +109,55 @@ class OrderManagerController extends BaseController
         $orderDetail = $orderService->getOrderDetail($id);
         // dump($orderDetail);
         return view('order/order_detail', $orderDetail);
+    }
+
+
+    /**
+     * 导出数据到Excel,使用注解路由
+     * @Route("order/export")
+     */
+    public function export()
+    {
+        $sql = <<<sql
+        SELECT
+        a.order_number,
+        a.product_number,
+        b.logistics,
+        b.inspection_report,
+        b.rceceipt_confirm,
+        b.rceceipt_date,
+        b.invoice_date,
+        b.invoice_code,
+        b.invoice_number,
+        b.invoice_follow,
+        b.express,
+        b.express_number,
+        b.ticket_confirm,
+        b.acceptance,
+        b.recovery_of_balance,
+        b.send_date,
+        c.customer_name,
+        c.customer_address,
+        c.phone,
+        c.contacts,
+        JSON_UNQUOTE(JSON_EXTRACT(a.product_info,'$.product_name')) as product_name,
+        JSON_UNQUOTE(JSON_EXTRACT(a.product_info,'$.product_specs')) as product_specs,
+        JSON_UNQUOTE(JSON_EXTRACT(a.product_info,'$.product_model')) as product_model,
+        JSON_UNQUOTE(JSON_EXTRACT(a.product_info,'$.special_request')) as special_request,
+        JSON_UNQUOTE(JSON_EXTRACT(a.receive_info,'$.recipient_company')) as recipient_company,
+        JSON_UNQUOTE(JSON_EXTRACT(a.receive_info,'$.recipient')) as recipient,
+        JSON_UNQUOTE(JSON_EXTRACT(a.receive_info,'$.recipient_phone')) as recipient_phone,
+        JSON_UNQUOTE(JSON_EXTRACT(a.receive_info,'$.recipient_address')) as recipient_address,
+        JSON_UNQUOTE(JSON_EXTRACT(a.receive_info,'$.ticket')) as ticket,
+        JSON_UNQUOTE(JSON_EXTRACT(a.receive_info,'$.ticket_phone')) as ticket_phone,
+        JSON_UNQUOTE(JSON_EXTRACT(a.receive_info,'$.ticket_address')) as ticket_address
+        FROM
+            `order_detail` a
+            LEFT JOIN `order_info` b ON a.order_number = b.order_number LEFT JOIN customer_info c ON b.customer_id=c.id;
+        sql;
+
+
+        $exportOrder = Db::query($sql);
+        return ResponseResult::Success($exportOrder);
     }
 }

@@ -11,7 +11,7 @@
 
                 <!-- 订单信息 -->
                 <div class="layui-tab-item layui-show">
-                    <table class="layui-table" id="order_table">
+                    <table class="layui-table" id="order_table" table-name="订单信息">
                         <tbody>
                             <tr>
                                 <td>订单编号</td>
@@ -90,7 +90,7 @@
                 <!-- 客户信息 -->
                 <div class="layui-tab-item">
 
-                    <table class="layui-table" id="customer_table">
+                    <table class="layui-table" id="customer_table" table-name="客户信息">
                         <tbody>
                             <tr>
                                 <td>客户姓名</td>
@@ -159,11 +159,11 @@
 
     </div>
 </body>
-<script type="text/javascript" src="{__STATIC_PATH}/js/excel.js"></script>
+
 <!-- 产品信息模板 -->
 <script id="product_tpl" type="text/html">
     {{#  layui.each(d, function(index, item){ }}
-    <table class="layui-table" class="product_table">
+    <table class="layui-table" class="product_table" table-name="产品信息">
         <tbody >
             <tr> <td>产品编号</td>   <td>{{item.product_number}}</td> </tr>
             <tr> <td>产品名称</td>   <td>{{item.product_name}}</td> </tr>
@@ -187,7 +187,6 @@
 <script id="recevie_data" type="text/html">
    <i>{$orderDetailList.0.receive_info}</i>
 </script>
-
 <script>
 
     //注意：选项卡 依赖 element 模块，否则无法进行功能性操作
@@ -246,20 +245,72 @@
             // console.log(html)
         });
 
-
         //监听Tab切换，以改变地址hash值
         element.on('tab(order_detail_tab)', function (data) {
             // location.hash = 'test1=' + this.getAttribute('lay-id');
             index = data.index; //得到当前Tab的所在下标
             // console.log(index);
             if (index == 3) {
-                var tableMap = new Map();
-                tableMap.set('订单信息', 'order_table');
-                // tableMap.set('商品信息', 'product_table');
-                // tableMap.set('客户信息', 'customer_table');
-                window.tableToExcel(tableMap, dateToString(new Date) + "_" + order_number)
-            }
+                // 单引号有可能获取不到元素
+                var tables = document.getElementsByTagName("table");
+                // 返回的对象是HTMLCollection元素
+                console.log(tables)
+                var exportData = []
+                // 合并列数组
+                var mergeColArray = []
+                for (var i = 0; i < tables.length; i++) {
+                    var table = tables[i];
+                    var data = LAY_EXCEL.tableToJson(table);
+                    // console.log(data)
 
+                    // 合并列行数
+                    let merge_rownum = exportData.length + 1
+                    let mergeCol = []
+                    mergeCol.push('A' + merge_rownum, 'B' + merge_rownum)
+                    mergeColArray.push(mergeCol)
+                    let tableTitle = table.getAttribute("table-name")
+                    // 获取头部和body 
+                    exportData.push.apply(exportData, [[tableTitle]])
+                    exportData.push.apply(exportData, data.head)
+                    exportData.push.apply(exportData, data.body)
+                    // 插入空行,数组内两个空双引号就表示插入两行空行,但是插入字符的话,一个字符占一个单元格
+                    exportData.push.apply(exportData, [""])
+                }
+                console.log(exportData)
+                let len = exportData.length;
+                console.log("导出的Excel文件总行数：" + len)
+                // LAY_EXCEL.setExportCellStyle(exportData, 'A1:B40', {
+                //     s: {
+                //         border: {
+                //             top: { style: 'thick', color: { rgb: 'FFFF0000' } },
+                //             bottom: { style: 'thick', color: { rgb: 'FFFF0000' } },
+                //             left: { style: 'thick', color: { rgb: 'FFFF0000' } },
+                //             right: { style: 'thick', color: { rgb: 'FFFF0000' } }
+                //         },
+                //         fill: { bgColor: { indexed: 64 }, fgColor: { rgb: "FF0000" } },
+                //         alignment: {
+                //             horizontal: 'center',
+                //             vertical: 'center'
+                //         }
+                //     }
+                // }, function (cell, newCell, row, config, currentRow, currentCol, fieldKey) {
+                //     // 回调参数，cell:原有数据，newCell:根据批量设置规则自动生成的样式，row:所在行数据，config:传入的配置,currentRow:当前行索引,currentCol:当前列索引，fieldKey:当前字段索引
+                //     return ((currentRow + currentCol) % 2 === 0) ? newCell : cell;// 隔行隔列上色
+                // });
+                // 合并单元格的位置
+                // console.log(mergeColArray)
+                // 导出的excel文件名
+                let excelFileName = dateToString(new Date) + "_" + order_number + '订单明细导出.xlsx';
+                 // 合并单元格
+                var mergeConf = LAY_EXCEL.makeMergeConfig(mergeColArray)
+                LAY_EXCEL.exportExcel({ sheet1: exportData }, excelFileName, 'xlsx', {
+                    extend: {
+                        // 需传入生成好的配置信息
+                        '!merges': mergeConf
+                    }
+                })
+
+            }
         });
 
     });
