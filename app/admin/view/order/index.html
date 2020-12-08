@@ -85,6 +85,7 @@
                     { field: 'rceceipt_date', title: '收货日期', align: "center", },
                     { field: 'invoice_date', title: '开票日期', align: "center", },
                     { field: 'invoice_code', title: '发票代码', align: "center", },
+                    { field: 'invoice_number', title: '发票号码', align: "center", },
                     { field: 'invoice_follow', title: '发票是否随货', align: "center", },
                     { field: 'express', title: '快递公司', align: "center", },
                     { field: 'express_number', title: '快递单号', align: "center", },
@@ -159,6 +160,82 @@
                             layer.msg('请选择一行作为编辑对象!');
                         }
                         break;
+                    case 'LAYTABLE_EXPORT':
+                        $.post('{:url("/admin/order/export")}', {},
+                            function (res) {
+                                // 1. 数组头部新增表头
+                                res.data.unshift({
+                                    'order_number':'订单编号',
+                                    'product_number':'产品编号',
+                                    'logistics':'承运物流',
+                                    'inspection_report':'检验报告',
+                                    'rceceipt_confirm':'收货确认',
+                                    'rceceipt_date':'收货日期',
+                                    'invoice_date':'开票日期',
+                                    'invoice_code':'发票代码',
+                                    'invoice_number':'发票号码',
+                                    'invoice_follow':'发票是否随货',
+                                    'express':'快递公司',
+                                    'express_number':'快递单号',
+                                    'ticket_confirm':'收票确认',
+                                    'acceptance':'安装验收',
+                                    'recovery_of_balance':'余款追讨',
+                                    'send_date':'发货日期',
+                                    'customer_name':'客户姓名',
+                                    'customer_address':'客户地址',
+                                    'phone':'电话',
+                                    'contacts':'联系人',
+                                    'product_name':'产品名称',
+                                    'product_specs':'规格',
+                                    'product_model':'型号',
+                                    'special_request':'特殊要求',
+                                    'recipient_company':'收货单位名称',
+                                    'recipient':'收货人',
+                                    'recipient_phone':'收货电话',
+                                    'recipient_address':'收货地址',
+                                    'ticket':'收票人',
+                                    'ticket_phone':'收票电话',
+                                    'ticket_address':'收票地址',
+
+                                });
+                                // 2. 如果需要调整顺序，请执行梳理函数
+                                var data = LAY_EXCEL.filterExportData(res.data, [
+                                    'order_number',
+                                    'product_number',
+                                    'logistics',
+                                    'inspection_report',
+                                    'rceceipt_confirm',
+                                    'rceceipt_date',
+                                    'invoice_date',
+                                    'invoice_code',
+                                    'invoice_number',
+                                    'invoice_follow',
+                                    'express',
+                                    'express_number',
+                                    'ticket_confirm',
+                                    'acceptance',
+                                    'recovery_of_balance',
+                                    'send_date',
+                                    'customer_name',
+                                    'customer_address',
+                                    'phone',
+                                    'contacts',
+                                    'product_name',
+                                    'product_specs',
+                                    'product_model',
+                                    'special_request',
+                                    'recipient_company',
+                                    'recipient',
+                                    'recipient_phone',
+                                    'recipient_address',
+                                    'ticket',
+                                    'ticket_phone',
+                                    'ticket_address',
+
+                                ]);
+                                // 3. 执行导出函数，系统会弹出弹框
+                                LAY_EXCEL.exportExcel(data, '订单列表.xlsx', 'xlsx')
+                            }, "json");
                 };
             });
 

@@ -153,7 +153,7 @@ class OrderManagerController extends BaseController
         JSON_UNQUOTE(JSON_EXTRACT(a.receive_info,'$.ticket_address')) as ticket_address
         FROM
             `order_detail` a
-            LEFT JOIN `order_info` b ON a.order_number = b.order_number LEFT JOIN customer_info c ON b.customer_id=c.id;
+            LEFT JOIN `order_info` b ON a.order_number = b.order_number LEFT JOIN `customer_info` c ON b.customer_id=c.id;
         sql;
 
 

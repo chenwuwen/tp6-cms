@@ -258,6 +258,8 @@
                 var exportData = []
                 // 合并列数组
                 var mergeColArray = []
+                // 合并单元格的行索引,从0开始的
+                var rowArray = []
                 for (var i = 0; i < tables.length; i++) {
                     var table = tables[i];
                     var data = LAY_EXCEL.tableToJson(table);
@@ -265,6 +267,7 @@
 
                     // 合并列行数
                     let merge_rownum = exportData.length + 1
+                    rowArray.push(exportData.length)
                     let mergeCol = []
                     mergeCol.push('A' + merge_rownum, 'B' + merge_rownum)
                     mergeColArray.push(mergeCol)
@@ -273,35 +276,49 @@
                     exportData.push.apply(exportData, [[tableTitle]])
                     exportData.push.apply(exportData, data.head)
                     exportData.push.apply(exportData, data.body)
-                    // 插入空行,数组内两个空双引号就表示插入两行空行,但是插入字符的话,一个字符占一个单元格
-                    exportData.push.apply(exportData, [""])
+                    // 插入空行,数组内两个空双引号就表示插入两列单元格,如果想要插入多行,则传入多个数组
+                    exportData.push.apply(exportData, [["", ""]])
                 }
-                console.log(exportData)
+                console.log(rowArray)
+                console.log(JSON.stringify(exportData))
                 let len = exportData.length;
                 console.log("导出的Excel文件总行数：" + len)
-                // LAY_EXCEL.setExportCellStyle(exportData, 'A1:B40', {
-                //     s: {
-                //         border: {
-                //             top: { style: 'thick', color: { rgb: 'FFFF0000' } },
-                //             bottom: { style: 'thick', color: { rgb: 'FFFF0000' } },
-                //             left: { style: 'thick', color: { rgb: 'FFFF0000' } },
-                //             right: { style: 'thick', color: { rgb: 'FFFF0000' } }
-                //         },
-                //         fill: { bgColor: { indexed: 64 }, fgColor: { rgb: "FF0000" } },
-                //         alignment: {
-                //             horizontal: 'center',
-                //             vertical: 'center'
-                //         }
-                //     }
-                // }, function (cell, newCell, row, config, currentRow, currentCol, fieldKey) {
-                //     // 回调参数，cell:原有数据，newCell:根据批量设置规则自动生成的样式，row:所在行数据，config:传入的配置,currentRow:当前行索引,currentCol:当前列索引，fieldKey:当前字段索引
-                //     return ((currentRow + currentCol) % 2 === 0) ? newCell : cell;// 隔行隔列上色
-                // });
+
+
+                mergeColArray.forEach((item, index, array) => {
+                    // 使用边框设置辅助函数 setRoundBorder 对某个范围的单元格生成左右上下环绕的边框
+                    // 上下样式会被覆盖
+                    let range = item.join(":")
+                    console.log(range)
+                    LAY_EXCEL.setRoundBorder(exportData, range, {
+                        top: { style: 'thick', color: { rgb: 'FFFF0000' } },
+                        bottom: { style: 'thick', color: { rgb: 'FFFF0000' } },
+                        left: { style: 'thick', color: { rgb: 'FFFF0000' } },
+                        right: { style: 'thick', color: { rgb: 'FFFF0000' } }
+                    })
+                })
+       
+                LAY_EXCEL.setExportCellStyle(exportData, 'A1:B' + len, {
+                    s: {
+                        fill: { bgColor: { indexed: 64 }, fgColor: { rgb: "f7f7f7" } },
+                        alignment: {
+                            horizontal: 'center',
+                            vertical: 'center'
+                        }
+                    }
+                }, function (cell, newCell, row, config, currentRow, currentCol, fieldKey) {
+                    // 回调参数，cell:原有数据，newCell:根据批量设置规则自动生成的样式，row:所在行数据，config:传入的配置,currentRow:当前行索引,currentCol:当前列索引，fieldKey:当前字段索引
+                    // return ((currentRow + currentCol) % 2 === 0) ? newCell : cell;// 隔行隔列上色
+                    return rowArray.indexOf(currentRow) > -1 ? newCell : cell;
+                });
+
+
+
                 // 合并单元格的位置
                 // console.log(mergeColArray)
                 // 导出的excel文件名
                 let excelFileName = dateToString(new Date) + "_" + order_number + '订单明细导出.xlsx';
-                 // 合并单元格
+                // 合并单元格
                 var mergeConf = LAY_EXCEL.makeMergeConfig(mergeColArray)
                 LAY_EXCEL.exportExcel({ sheet1: exportData }, excelFileName, 'xlsx', {
                     extend: {
