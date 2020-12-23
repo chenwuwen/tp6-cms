@@ -90,7 +90,7 @@ class OrderManagerController extends BaseController
     /**
      * 删除订单信息
      */
-    public function deleteOrder()
+    public function deleteOrder(): \think\response\Json
     {
         $idStr = request()->param("ids");
         $ids = explode('_', $idStr);
@@ -102,7 +102,7 @@ class OrderManagerController extends BaseController
     /**
      * 查看订单明细
      */
-    public function viewOrderDetail()
+    public function viewOrderDetail(): \think\response\View
     {
         $id = request()->param("id");
         $orderService = new OrderService;
@@ -116,8 +116,9 @@ class OrderManagerController extends BaseController
      * 导出数据到Excel,使用注解路由
      * @Route("order/export")
      */
-    public function export()
+    public function export(): \think\response\Json
     {
+//        定义多行字符串类似EOF
         $sql = <<<sql
         SELECT
         a.order_number,

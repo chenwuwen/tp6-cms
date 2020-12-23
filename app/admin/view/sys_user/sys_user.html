@@ -1,3 +1,5 @@
+<!--    表单令牌,防止重复提交-->
+<meta name="csrf-token" content="{:token()}">
 <div class="layui-form" lay-filter="layuiadmin-form-admin" id="layuiadmin-form-admin" style="padding: 20px 30px 0 0;">
     <div class="layui-form-item" style="display: none">
         <label class="layui-form-label">ID</label>
@@ -80,6 +82,9 @@
             console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
             $.ajax({
                 url: '{:url("/admin/sysuser/addOrEditSysUser")}',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 type: 'post',
                 data: data.field,
                 success: function (result) {

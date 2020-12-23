@@ -1,5 +1,6 @@
 <div class="layui-fluid">
-
+    <!--    表单令牌,防止重复提交-->
+    <meta name="csrf-token" content="{:token()}">
     <form class="layui-form" action="" lay-filter="component-form-group">
 
 
@@ -85,6 +86,9 @@
             console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
             $.ajax({
                 url: '{:url("/admin/customer/addOrEditCustomer")}',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 type: 'post',
                 data: data.field,
                 success: function (result) {

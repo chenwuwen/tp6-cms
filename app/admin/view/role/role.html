@@ -15,7 +15,8 @@
     }
 </style>
 <div class="layui-fluid">
-
+    <!--    表单令牌,防止重复提交-->
+    <meta name="csrf-token" content="{:token()}">
     <form class="layui-form" action="" lay-filter="component-form-group">
 
         <div class="layui-form-item" style="display: none">
@@ -86,6 +87,9 @@
             console.log(permissionIds)
             $.ajax({
                 url: '{:url("/admin/role/addOrEditRole")}',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 type: 'post',
                 data: { 'id': $("#role_id").val(), 'role_name': $("#role_name").val(), 'describe': $("#describe").val(), 'permissionList': permissionIds },
                 success: function (result) {
