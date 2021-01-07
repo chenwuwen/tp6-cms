@@ -11,7 +11,7 @@
             </a>
           </li>
           <li class="layui-nav-item layui-hide-xs" lay-unselect>
-            <a href='{$siteSettingInfo.domain}' target="_blank" title="前台">
+            <a href='{$siteSettingInfo.domain?:""}' target="_blank" title="前台">
               <i class="layui-icon layui-icon-website"></i>
             </a>
           </li>
@@ -75,7 +75,7 @@
       <div class="layui-side layui-side-menu">
         <div class="layui-side-scroll">
           <div class="layui-logo" lay-href="home/console.html">
-            <span>{$siteSettingInfo.sitename}</span>
+            <span>{$siteSettingInfo.sitename?:''}</span>
           </div>
 
 
