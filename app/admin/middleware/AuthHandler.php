@@ -12,7 +12,7 @@ class AuthHandler
      * 忽略权限检测数组,但是需要登录
      */
     static $IGNORE_PERMISSION_URL = [
-        'dashboard', "index", "permission","logout"
+        'dashboard', "notice", "index", "permission", "logout"
     ];
 
     public function handle($request, \Closure $next)

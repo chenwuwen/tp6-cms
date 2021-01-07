@@ -118,3 +118,7 @@ Route::get('permission/getTree', 'SysPermissionManagerController/getTree', 'GET'
 Route::get('site$', 'SiteSettingController/index', 'GET');
 
 Route::post('site/save', 'SiteSettingController/save', 'POST');
+
+
+// notice
+Route::get('notice', 'NoticeController/index', 'GET');

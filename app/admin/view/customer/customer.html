@@ -9,14 +9,14 @@
                 <label class="layui-form-label">客户ID</label>
                 <div class="layui-input-inline">
                     <input type="text" value='{$customer.id}' name="id" lay-verify="required"
-                        autocomplete="off" class="layui-input">
+                           autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">客户名称</label>
                 <div class="layui-input-inline">
                     <input type="text" value='{$customer.customer_name}' name="customer_name" lay-verify="required"
-                        autocomplete="off" class="layui-input">
+                           autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
@@ -29,7 +29,7 @@
                 <label class="layui-form-label">电话</label>
                 <div class="layui-input-inline">
                     <input type="tel" name="phone" value='{$customer.phone}' lay-verify="phone" autocomplete="off"
-                        class="layui-input">
+                           class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
@@ -41,21 +41,21 @@
         </div>
 
         <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">开票资料</label>
-                <div class="layui-input-inline">
-                    <button type="button" class="layui-btn" id="test1">
-                        <i class="layui-icon">&#xe67c;</i>上传附件
-                    </button>
-                    <i id="file_name">{$customer.ticket_data}</i>
-                    <input type="text" value='{$customer.ticket_data}' id="ticket_data" name="ticket_data"
-                        style="display: none">
+            <label class="layui-form-label">开票资料</label>
+            <div class="layui-input-inline">
+                <button type="button" class="layui-btn" id="appendix">
+                    <i class="layui-icon">&#xe67c;</i>上传附件
+                </button>
+            </div>
+            <div class="layui-input-inline">
+                <div id="file_name" class="layui-btn" style="background-color:transparent;color:#555">
+                    {$customer.ticket_data}
                 </div>
             </div>
+            <input type="text" value='{$customer.ticket_data}' id="ticket_data" name="ticket_data"
+                   style="display: none">
+
         </div>
-
-  
-
 
 
         <div class="layui-form-item">
@@ -120,20 +120,20 @@
         let UPLOAD_FILES;
         let Loading_Index;
         var uploadInst = upload.render({
-            elem: '#test1',  //绑定元素
+            elem: '#appendix',  //绑定元素
             url: '{:url("/upload")}',  //上传接口
             auto: true, //自动上传
             accept: 'file',
             multiple: false, //是否允许多文件上传
             before: function (obj) { //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
-                Loading_Index =  layer.load(2); //上传loading
+                Loading_Index = layer.load(2); //上传loading
             },
             choose: function (obj) {
                 // 将每次选择的文件追加到文件队列
                 UPLOAD_FILES = obj.pushFile();
                 // console.log(UPLOAD_FILES)
-                var property = "";
-                for (var item in obj) {
+                let property = "";
+                for (let item in obj) {
                     property += "属性：" + item + "数值：" + obj[item] + "\n";
                 }
                 console.log(property)
@@ -146,11 +146,15 @@
             done: function (res, index, upload) { // res（服务端响应信息）、index（当前文件的索引）、upload（重新上传的方法，一般在文件上传失败后使用）
                 //上传完毕回调
                 console.log(res)
-                $("#ticket_data").val(res.data)
                 //删除数组文件中上传成功的图片，防止重复上传（重点）
                 delete UPLOAD_FILES[index]
                 layer.close(Loading_Index); //关闭loading
-
+                if (res.code != 0) {
+                    $("#file_name").html("")
+                    layer.msg('上传失败!');
+                } else {
+                    $("#ticket_data").val(res.data);
+                }
             },
             error: function (index, upload) {
                 //删除数组文件中上传成功的图片，防止重复上传（重点）
